@@ -420,8 +420,10 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
 
     //提交一行属性
     $scope.updateAttr = function (model, thisRowTemp, index) {
-        console.log(thisRowTemp)
         console.log(model)
+        //给thisRowTemp的name赋初值
+        thisRowTemp.name = model.attributes[index].name;
+
         if (!checkThisRowOK(thisRowTemp,index,$scope.formDataUpdateConfig.model.attributes)) {
             return;
         }
@@ -480,11 +482,19 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                                 $filter('toasterManage')(5, fileName + "上传成功!",true);
                             }, 0);
                             //复制当前编辑的临时一行到我们要上传的数组
-                            $scope.formDataUpdateConfig.model.attributes[index] = angular.copy(thisRowTemp);
-                            $scope.formDataUpdateConfig.model.attributes[index].md5 = res.dataMap.tree.md5;
-                            $scope.formDataUpdateConfig.model.attributes[index].web = baseUrl.pushUrl + res.dataMap.tree.downloadPath;
-                            $scope.formDataUpdateConfig.model.attributes[index].uploadState = true;
-                            $scope.formDataUpdateConfig.model.attributes[index].editing = false;
+                            $scope.formDataUpdateConfig.model.attributes[index] = {
+                                version: thisRowTemp.version,
+                                description: thisRowTemp.description,
+                                force_update: thisRowTemp.force_update,
+                                name: thisRowTemp.name,
+                                md5 : res.dataMap.tree.md5,
+                                web : baseUrl.pushUrl + res.dataMap.tree.downloadPath,
+                                uploadState : true,
+                                show: true,
+                                editing : false,
+                            } ;
+                            console.log($scope.formDataUpdateConfig.model.attributes[index])
+                            console.log(thisRowTemp)
                         }
                     });
                 }
