@@ -370,7 +370,7 @@ public class UpdateConfigController {
      */
     @RequestMapping("api/updateConfig/boardUpdate")
     @ResponseBody
-    public AjaxResponse boardUpdateUrl(String jsonArgs) {
+    public AjaxResponse boardUpdateUrl(@RequestParam(value = "jsonArgs")String jsonArgs) {
         LOGGER.info("boardUpdate jsonArgs= {}", jsonArgs);
         AjaxResponse resp = AjaxResponse.success();
         if( jsonArgs == null || "".equals(jsonArgs) ) {
