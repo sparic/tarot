@@ -733,6 +733,22 @@ function routerAll(baseUrl){
                     return ctrlManagerLoader($ocLazyLoad, 'configuration', 'branchConfigCtrl.js')
                 }
             }
+        },
+        'configuration.mailcontact' : {
+            url: "/mailcontact",
+            templateUrl: "assets/mvc/desktop/view/manager.html",
+            controller: 'mailContactConfigCtrl',
+            data: {
+                pageTitle: '配置管理',
+                subTitle: '联系人管理',
+                datatable: 'assets/mvc/configuration/view/contactConfig_datatable.html',
+                editor: 'assets/mvc/configuration/view/contactConfig_editor.html',
+            },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return ctrlManagerLoader($ocLazyLoad, 'configuration', 'mailContactCtrl.js')
+                }
+            }
         }
 
     }

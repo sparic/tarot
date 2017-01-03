@@ -336,7 +336,6 @@ public class AdminUserController {
         ListSortUtil<Role> sortList = new ListSortUtil<Role>();
         sortList.sort(roleList, "roleName", "asc");
         for (Role role : roleList) {
-            Map entry = new HashMap();
             resp.addDataEntry(objectToEntry(role));
         }
         return resp;

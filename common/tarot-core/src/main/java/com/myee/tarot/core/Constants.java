@@ -14,6 +14,17 @@ public class Constants {
 	public final static String SHOP_URI               = "/shop";
 	public final static String ACCESS_DENI_MESSAGE    = "detailMessage";
 
+	public final static String MAIL_HOST = "smtp.exmail.qq.com";
+	public final static String MAIL_SENDER_ACCOUNT = "cloudmanager@mrobot.cn";
+	public final static String MAIL_SENDER_PSW = "Cloud161230";
+	public final static int MAIL_HOST_PORT = 465;
+	public final static String MAIL_AUTH = "mail.smtp.auth";
+	public final static String MAIL_SSL = "mail.smtp.ssl.enable";
+	public final static String MAIL_SOCKET_CLASS = "mail.smtp.socketFactory.class";
+	public final static String MAIL_CREATE_FACTORY = "javax.net.ssl.SSLSocketFactory";
+	public final static String MAIL_TIMEOUT_CLASS = "mail.smtp.timeout";
+	public final static long MAIL_TIMEOUT_MILE_SECONDS = 25000;
+
 	public final static String MESSAGE_DEVICE    = "设备";
 	public final static String MESSAGE_OFFLINE    = "离线";
 
