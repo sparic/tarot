@@ -1,7 +1,7 @@
-package com.myee.tarot.resource.service;
+package com.myee.tarot.configuration.service;
 
 import com.myee.tarot.core.service.GenericEntityService;
-import com.myee.tarot.resource.domain.UpdateConfigProductUsedXREF;
+import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
 
 import java.util.List;
 

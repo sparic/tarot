@@ -421,8 +421,10 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
     //提交一行属性
     $scope.updateAttr = function (model, thisRowTemp, index) {
         console.log(model)
+        console.log(index)
+        console.log(thisRowTemp)
         //给thisRowTemp的name赋初值
-        thisRowTemp.name = model.attributes[index].name;
+        thisRowTemp.name = $scope.formDataUpdateConfig.model.attributes[index].name;
 
         if (!checkThisRowOK(thisRowTemp,index,$scope.formDataUpdateConfig.model.attributes)) {
             return;
@@ -645,6 +647,9 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         if (!model.attributes) {
             model.attributes = [];
         }
+        if (!model.attrTemp) {
+            model.attrTemp = [];
+        }
 
         //倒序遍历判断是否有未填写完整的行，如果有，则报错；如果没有，再新增一行
         var totalLength = model.attributes.length;
@@ -669,7 +674,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
 
         //校验通过新增一行
         var baseInfo = getBaseInfoByType($scope.formDataUpdateConfig.model.type);
-        model.attributes.push({
+        var data = {
             name: '',
             version: '',
             force_update: baseInfo.FORCE_UPDATE_DEFAULT,
@@ -681,7 +686,11 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
             md5InputValid: false,
             show: true,
             editing: true
-        });
+        };
+        model.attributes.push(data);
+
+        //复制一份给attrTemp
+        model.attrTemp.push(data);
     };
 
     $scope.fileList = [];//存放上传的文件列表

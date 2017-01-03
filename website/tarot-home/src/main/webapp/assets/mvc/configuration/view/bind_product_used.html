@@ -56,7 +56,7 @@
                                                                 </thead>
                                                                 <tbody>
                                                                 <tr>
-                                                                    <td colspan="5" class="center" ng-if="bindDeviceDetail[$index].length<=0">没有查找到数据</td>
+                                                                    <td colspan="6" class="center" ng-if="bindDeviceDetail[$index].length<=0">没有查找到数据</td>
                                                                 </tr>
                                                                 <tr ng-repeat="v in detail.version"  ng-if="detail.code == 0 && detail.version.length > 0">
                                                                     <td>
@@ -78,7 +78,7 @@
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="5" class="center" ng-if="detail.code == -1">{{detail.message}}</td>
+                                                                    <td colspan="6" class="center" ng-if="detail.code == -1">{{detail.message}}</td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>

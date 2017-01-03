@@ -1,15 +1,11 @@
-package com.myee.tarot.resource.service.impl;
+package com.myee.tarot.configuration.service.impl;
 
 import com.myee.tarot.core.service.GenericEntityServiceImpl;
-import com.myee.tarot.core.util.PageRequest;
 import com.myee.tarot.core.util.PageResult;
 import com.myee.tarot.core.util.WhereRequest;
-import com.myee.tarot.resource.dao.NotificationDao;
-import com.myee.tarot.resource.dao.UpdateConfigDao;
-import com.myee.tarot.resource.domain.Notification;
-import com.myee.tarot.resource.domain.UpdateConfig;
-import com.myee.tarot.resource.service.NotificationService;
-import com.myee.tarot.resource.service.UpdateConfigService;
+import com.myee.tarot.configuration.dao.UpdateConfigDao;
+import com.myee.tarot.configuration.domain.UpdateConfig;
+import com.myee.tarot.configuration.service.UpdateConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,6 @@
 <div>
     <div class="panel-body formly">
-        <div class="btn btn-sm btn-success upMenuBut m-l" ng-if="mgrUpdateConfigData.constant.SWITCH_MERCHANT_STORE == 100">
-            <i class="fa fa-upload bigger-120"></i><span>自研平板</span>
-            <input type="file" id="boardUpdateFile" onchange="angular.element(this).scope().boardUpdateFile(this)"/>
-        </div>
-        <form name="formData.form" class="formly-field" novalidate>
+        <form name="formData.form" class="formly-field" >
             <formly-form model="formDataUpdateConfig.model" fields="formDataUpdateConfig.fields" form="formDataUpdateConfig.form" options="formDataUpdateConfig.options">
                 <label class="col-sm-2 control-label ">
                     配置详细

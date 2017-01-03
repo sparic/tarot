@@ -1,11 +1,9 @@
-package com.myee.tarot.resource.service;
+package com.myee.tarot.configuration.service;
 
 import com.myee.tarot.core.service.GenericEntityService;
-import com.myee.tarot.core.util.PageRequest;
 import com.myee.tarot.core.util.PageResult;
 import com.myee.tarot.core.util.WhereRequest;
-import com.myee.tarot.resource.domain.Notification;
-import com.myee.tarot.resource.domain.UpdateConfig;
+import com.myee.tarot.configuration.domain.UpdateConfig;
 
 import java.text.ParseException;
 

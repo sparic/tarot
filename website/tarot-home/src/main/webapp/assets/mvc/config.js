@@ -718,6 +718,21 @@ function routerAll(baseUrl){
                     return ctrlManagerLoader($ocLazyLoad, 'configuration', 'updateConfigCtrl.js')
                 }
             }
+        },
+        'configuration.branch' : {
+            url: "/branch",
+            templateUrl: "assets/mvc/desktop/view/manager.html",
+            controller: 'branchConfigCtrl',
+            data: {
+                pageTitle: '配置管理',
+                subTitle: '分支配置',
+                datatable: 'assets/mvc/configuration/view/branchConfig_datatable.html',
+            },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return ctrlManagerLoader($ocLazyLoad, 'configuration', 'branchConfigCtrl.js')
+                }
+            }
         }
 
     }

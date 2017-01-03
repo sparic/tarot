@@ -1,9 +1,9 @@
-package com.myee.tarot.resource.service.impl;
+package com.myee.tarot.configuration.service.impl;
 
 import com.myee.tarot.core.service.GenericEntityServiceImpl;
-import com.myee.tarot.resource.dao.UpdateConfigProductUsedXREFDao;
-import com.myee.tarot.resource.domain.UpdateConfigProductUsedXREF;
-import com.myee.tarot.resource.service.UpdateConfigProductUsedXREFService;
+import com.myee.tarot.configuration.dao.UpdateConfigProductUsedXREFDao;
+import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
+import com.myee.tarot.configuration.service.UpdateConfigProductUsedXREFService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

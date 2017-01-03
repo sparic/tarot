@@ -3,29 +3,25 @@ package com.myee.tarot.web.configuration.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.myee.djinn.dto.NoticeType;
 import com.myee.djinn.endpoint.TrunkingInterface;
 import com.myee.djinn.rpc.bootstrap.ServerBootstrap;
 import com.myee.tarot.catalog.domain.DeviceUsed;
-import com.myee.tarot.catalog.domain.DeviceUsedAttribute;
 import com.myee.tarot.catalog.domain.ProductUsed;
-import com.myee.tarot.catalog.domain.ProductUsedAttribute;
 import com.myee.tarot.catalog.service.ProductUsedService;
+import com.myee.tarot.configuration.domain.BranchConfig;
+import com.myee.tarot.configuration.service.BranchConfigService;
 import com.myee.tarot.core.Constants;
 import com.myee.tarot.core.util.*;
 import com.myee.tarot.core.util.FileUtils;
 import com.myee.tarot.core.util.ajax.AjaxPageableResponse;
 import com.myee.tarot.core.util.ajax.AjaxResponse;
-import com.myee.tarot.resource.domain.UpdateConfig;
-import com.myee.tarot.resource.domain.UpdateConfigProductUsedXREF;
-import com.myee.tarot.resource.service.UpdateConfigProductUsedXREFService;
-import com.myee.tarot.resource.service.UpdateConfigService;
+import com.myee.tarot.configuration.domain.UpdateConfig;
+import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
+import com.myee.tarot.configuration.service.UpdateConfigProductUsedXREFService;
+import com.myee.tarot.configuration.service.UpdateConfigService;
 import com.myee.tarot.resource.type.UpdateConfigSeeType;
-import com.myee.tarot.web.device.controller.AttributeDTO;
 import io.netty.channel.Channel;
-import org.apache.commons.io.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +30,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.File;
-import java.io.FileFilter;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -57,6 +51,8 @@ public class UpdateConfigController {
     private String DOWNLOAD_HTTP;
     @Autowired
     private UpdateConfigService updateConfigService;
+    @Autowired
+    private BranchConfigService branchConfigService;
     @Autowired
     private UpdateConfigProductUsedXREFService updateConfigProductUsedXREFService;
     @Autowired
@@ -375,7 +371,11 @@ public class UpdateConfigController {
     @RequestMapping("api/updateConfig/boardUpdate")
     @ResponseBody
     public AjaxResponse boardUpdateUrl(String jsonArgs) {
+        LOGGER.info("boardUpdate jsonArgs= {}", jsonArgs);
         AjaxResponse resp = AjaxResponse.success();
+        if( jsonArgs == null || "".equals(jsonArgs) ) {
+            return AjaxResponse.failed(-1, "参数错误");
+        }
         try {
             JSONObject object = JSON.parseObject(jsonArgs);
             String version = object.getString("version");
@@ -399,12 +399,12 @@ public class UpdateConfigController {
             String productName = versionSplit[0];
             String nextSoftwareVersion = calSoftwareVersionNext(versionSplit[1]);
             String thisPartCode = getPartCode(versionSplit[1]);//获取头、胸、手、编号
-            LOGGER.info("thisPartCode= {}",thisPartCode);
+            LOGGER.info("boardUpdate thisPartCode= {}",thisPartCode);
             int thisSoftwareVersionNum = getSoftwareVersionNum(versionSplit[1]);
             String hardwareVersion = versionSplit[2];
 ////            String time = versionSplit[3];
 //            File dest = org.apache.commons.io.FileUtils.getFile(DOWNLOAD_HOME, Constants.BOARD_UPDATE_BASEPATH, productName + "/" + hardwareVersion + "/" + softwareVersion);
-//            LOGGER.info("文件保存路径:" + dest.getPath());
+//            LOGGER.info("boardUpdate 文件保存路径:" + dest.getPath());
 //            //只取zip结尾的文件
 //            FileFilter fileFilter = new FileFilter() {
 //                @Override
@@ -421,9 +421,9 @@ public class UpdateConfigController {
 //            }
 //            String downloadUrl = DOWNLOAD_HTTP + Constants.BOARD_UPDATE_BASEPATH + productName + "/" + hardwareVersion + "/" + softwareVersion + "/" + listFile[0].getName();
 //            resp.addEntry("downloadPath", downloadUrl);
-//            LOGGER.info("文件下载url:" + downloadUrl);
+//            LOGGER.info("boardUpdate 文件下载url:" + downloadUrl);
 
-            LOGGER.info("jsonArgs= {}  DOWNLOAD_HOME={}", jsonArgs, DOWNLOAD_HOME);
+            LOGGER.info("boardUpdate jsonArgs= {}  DOWNLOAD_HOME={}", jsonArgs, DOWNLOAD_HOME);
             String latestVersionStr = "";
 
             //通过 type  deviceGroupNO 获取到对应设备组和配置记录的关系表数据
@@ -442,9 +442,9 @@ public class UpdateConfigController {
                 }
                 String configFilePath = updateConfig.getPath();
                 configFilePath = DOWNLOAD_HOME + File.separator + Constants.ADMIN_PACK + File.separator + configFilePath;
-                LOGGER.info("configFilePath ={} ", configFilePath);
+                LOGGER.info("boardUpdate configFilePath ={} ", configFilePath);
                 latestVersionStr = FileUtils.readTXT(configFilePath);
-                LOGGER.info("latestVersionStr ={} ", latestVersionStr);
+                LOGGER.info("boardUpdate latestVersionStr ={} ", latestVersionStr);
                 if(latestVersionStr == null || StringUtil.isBlank(latestVersionStr)) {
                     continue;
                 }
@@ -486,7 +486,7 @@ public class UpdateConfigController {
             //有升级权限，则根据路径去找升级配置文件
             String nextConfigPath = DOWNLOAD_HOME + "/"  + Constants.BOARD_UPDATE_BASEPATH +
                     productName + "/"  + hardwareVersion + "/" + nextSoftwareVersion + "/" + Constants.UPDATE_FILENAME_SELF_DESIGN_PAD;
-            LOGGER.info("下个版本配置文件保存路径:" + nextConfigPath);
+            LOGGER.info("boardUpdate 下个版本配置文件保存路径:" + nextConfigPath);
             latestVersionStr = FileUtils.readTXT(nextConfigPath);
             if(latestVersionStr == null || StringUtil.isBlank(latestVersionStr)) {
                 return AjaxResponse.failed(-1, "未找到比当前版本+1的版本配置内容");
@@ -502,14 +502,14 @@ public class UpdateConfigController {
 //            }
 //            String configFilePath = updateConfig.getPath();
 //            configFilePath = DOWNLOAD_HOME + File.separator + Constants.ADMIN_PACK + File.separator + configFilePath;
-//            LOGGER.info("configFilePath ={} ", configFilePath);
+//            LOGGER.info("boardUpdate configFilePath ={} ", configFilePath);
 //            latestVersionStr = FileUtils.readTXT(configFilePath);
-//            LOGGER.info("latestVersionStr ={} ", latestVersionStr);
+//            LOGGER.info("boardUpdate latestVersionStr ={} ", latestVersionStr);
 //            return latestVersionStr;
 
             return resp;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),"boardUpdate "+ e);
             return AjaxResponse.failed(-1, "出错");
         }
 
@@ -552,7 +552,84 @@ public class UpdateConfigController {
     private String getPartCode(String softVersion) throws Exception {
         int length = softVersion.length();
         //当前软件版本号的数字
-        return softVersion.substring(0,2);
+        return softVersion.substring(0, 2);
     }
+
+    /*分支管理*************************************************************************/
+    @RequestMapping(value = {"admin/configuration/branch/update"}, method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResponse addTableType(@RequestBody BranchConfig branchConfig, HttpServletRequest request) throws Exception {
+        AjaxResponse resp;
+        try {
+            String branchName = branchConfig.getName();
+            String branchSubName = branchConfig.getSubName();
+            BranchConfig branchConfigDB = branchConfigService.findByName(branchName, branchSubName);
+            if (branchConfigDB != null && !branchConfigDB.getId().equals(branchConfig.getId())) {
+                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"已存在相同主副标题的分支！");
+            }
+
+            branchConfig = branchConfigService.update(branchConfig);
+            resp = AjaxResponse.success();
+            resp.addEntry(Constants.RESPONSE_UPDATE_RESULT, branchConfig);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"出错");
+        }
+        return resp;
+    }
+
+    @RequestMapping(value = {"admin/configuration/branch/delete"}, method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResponse delTableType(@RequestBody BranchConfig branchConfig, HttpServletRequest request) throws Exception {
+        AjaxResponse resp;
+        try {
+            if (branchConfig.getId() == null || StringUtil.isNullOrEmpty(branchConfig.getId().toString())) {
+                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"参数错误");
+            }
+            BranchConfig branchConfigDB = branchConfigService.findById(branchConfig.getId());
+            if (branchConfigDB == null) {
+                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE, "分支不存在");
+            }
+
+            branchConfigService.delete(branchConfigDB);
+            return AjaxResponse.success();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"出错");
+        }
+    }
+
+    @RequestMapping(value = {"admin/configuration/branch/paging"}, method = RequestMethod.GET)
+    public
+    @ResponseBody
+    AjaxPageableResponse pageTypes(Model model, HttpServletRequest request, WhereRequest whereRequest) {
+        AjaxPageableResponse resp = new AjaxPageableResponse();
+        try {
+            PageResult<BranchConfig> pageList = branchConfigService.page(whereRequest);
+
+            List<BranchConfig> branchConfigList = pageList.getList();
+            for (BranchConfig branchConfig : branchConfigList) {
+                resp.addDataEntry(objectToEntry(branchConfig));
+            }
+            resp.setRecordsTotal(pageList.getRecordsTotal());
+            return resp;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(),e);
+            return resp;
+        }
+    }
+
+    //把类转换成entry返回给前端，解耦和
+    private Map objectToEntry(BranchConfig branchConfig) {
+        Map entry = new HashMap();
+        entry.put("id", branchConfig.getId());
+        entry.put("name", branchConfig.getName());
+        entry.put("subName", branchConfig.getSubName());
+        entry.put("description", branchConfig.getDescription());
+        entry.put("createTime", branchConfig.getCreateTime());
+        entry.put("manager", branchConfig.getManager());
+        return entry;
+    }
+
 
 }

@@ -220,8 +220,8 @@ function productUsedCtrl($scope, cResource, Constants, cTables, cfromly, NgTable
                     label: '设备组名称',
                     required: true,
                     placeholder: '设备组名称',
-                    valueProp: 'type',
-                    labelProp: 'friendlyType',
+                    //valueProp: 'type',
+                    //labelProp: 'friendlyType',
                     options: productOpts,
                     isSearch:true
                 }

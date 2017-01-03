@@ -1,10 +1,9 @@
-package com.myee.tarot.resource.domain;
+package com.myee.tarot.configuration.domain;
 
 import com.myee.tarot.catalog.domain.ProductUsed;
 import com.myee.tarot.core.GenericEntity;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Created by Chay on 2016/12/15.

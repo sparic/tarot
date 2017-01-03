@@ -38,8 +38,7 @@
         <class>com.myee.tarot.catalog.domain.ProductUsedAttribute</class>
 
         <class>com.myee.tarot.resource.domain.Notification</class>
-        <class>com.myee.tarot.resource.domain.UpdateConfig</class>
-        <class>com.myee.tarot.resource.domain.UpdateConfigProductUsedXREF</class>
+
         <class>com.myee.tarot.common.domain.LoginLog</class>
 
         <class>com.myee.tarot.catering.domain.Table</class>
@@ -63,6 +62,9 @@
         <class>com.myee.tarot.configuration.domain.ReceiptPrinted</class>
         <class>com.myee.tarot.configuration.domain.ReceiptPrintedItem</class>
         <class>com.myee.tarot.configuration.domain.ReceiptProductUsedXref</class>
+        <class>com.myee.tarot.configuration.domain.UpdateConfig</class>
+        <class>com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF</class>
+        <class>com.myee.tarot.configuration.domain.BranchConfig</class>
 
         <class>com.myee.tarot.datacenter.domain.SelfCheckLog</class>
         <class>com.myee.tarot.datacenter.domain.EventModule</class>

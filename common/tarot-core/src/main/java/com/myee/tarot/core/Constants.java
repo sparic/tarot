@@ -384,6 +384,10 @@ public class Constants {
 
 	public static final String SEARCH_OPTION_NAME = "name";
 
+	public static final String SEARCH_OPTION_SUB_NAME = "subName";
+
+	public static final String SEARCH_OPTION_MANAGER = "manager";
+
 	public static final String SEARCH_OPTION_CODE = "code";
 
 	public static final String SEARCH_OPTION_PHONE = "phone";

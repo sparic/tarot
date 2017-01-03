@@ -1,7 +1,7 @@
-package com.myee.tarot.resource.dao;
+package com.myee.tarot.configuration.dao;
 
 import com.myee.tarot.core.dao.GenericEntityDao;
-import com.myee.tarot.resource.domain.UpdateConfigProductUsedXREF;
+import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
 
 import java.util.List;
 

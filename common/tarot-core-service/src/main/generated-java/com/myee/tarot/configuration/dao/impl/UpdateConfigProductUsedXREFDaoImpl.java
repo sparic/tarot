@@ -1,12 +1,12 @@
-package com.myee.tarot.resource.dao.impl;
+package com.myee.tarot.configuration.dao.impl;
 
 import com.myee.tarot.catalog.dao.ProductUsedDao;
 import com.myee.tarot.catalog.domain.ProductUsed;
 import com.myee.tarot.core.dao.GenericEntityDaoImpl;
 import com.myee.tarot.core.util.StringUtil;
-import com.myee.tarot.resource.dao.UpdateConfigProductUsedXREFDao;
-import com.myee.tarot.resource.domain.QUpdateConfigProductUsedXREF;
-import com.myee.tarot.resource.domain.UpdateConfigProductUsedXREF;
+import com.myee.tarot.configuration.dao.UpdateConfigProductUsedXREFDao;
+import com.myee.tarot.configuration.domain.QUpdateConfigProductUsedXREF;
+import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.factory.annotation.Autowired;

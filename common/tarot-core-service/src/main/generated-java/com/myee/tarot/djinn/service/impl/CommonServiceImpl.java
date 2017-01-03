@@ -2,7 +2,6 @@ package com.myee.tarot.djinn.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.myee.djinn.dto.NoticeType;
 import com.myee.djinn.dto.NotificationDTO;
 import com.myee.djinn.dto.ShopDetail;
 import com.myee.djinn.dto.VersionInfo;
@@ -12,22 +11,18 @@ import com.myee.tarot.admin.domain.AdminUser;
 import com.myee.tarot.admin.service.AdminUserService;
 import com.myee.tarot.catalog.domain.DeviceUsed;
 import com.myee.tarot.catalog.service.DeviceUsedService;
-import com.myee.tarot.catalog.service.ProductUsedService;
 import com.myee.tarot.core.Constants;
 import com.myee.tarot.core.service.TransactionalAspectAware;
 import com.myee.tarot.core.util.FileUtils;
-import com.myee.tarot.core.util.StringUtil;
 import com.myee.tarot.merchant.domain.Merchant;
 import com.myee.tarot.merchant.domain.MerchantStore;
 import com.myee.tarot.merchant.service.MerchantStoreService;
 import com.myee.tarot.profile.domain.Address;
 import com.myee.tarot.resource.domain.Notification;
-import com.myee.tarot.resource.domain.UpdateConfig;
-import com.myee.tarot.resource.domain.UpdateConfigProductUsedXREF;
+import com.myee.tarot.configuration.domain.UpdateConfig;
+import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
 import com.myee.tarot.resource.service.NotificationService;
-import com.myee.tarot.resource.dao.NotificationDao;
-import com.myee.tarot.resource.service.UpdateConfigProductUsedXREFService;
-import com.myee.tarot.resource.service.UpdateConfigService;
+import com.myee.tarot.configuration.service.UpdateConfigProductUsedXREFService;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -40,8 +35,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 /**

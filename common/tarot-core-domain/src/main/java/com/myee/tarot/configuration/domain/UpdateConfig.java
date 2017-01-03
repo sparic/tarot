@@ -1,11 +1,7 @@
-package com.myee.tarot.resource.domain;
+package com.myee.tarot.configuration.domain;
 
-import com.myee.tarot.catalog.domain.DeviceUsed;
 import com.myee.tarot.catalog.domain.ProductUsed;
-import com.myee.tarot.catering.domain.TableType;
-import com.myee.tarot.catering.domain.TableZone;
 import com.myee.tarot.core.GenericEntity;
-import com.myee.tarot.merchant.domain.MerchantStore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
