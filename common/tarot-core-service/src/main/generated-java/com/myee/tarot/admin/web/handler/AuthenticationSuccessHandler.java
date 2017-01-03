@@ -60,7 +60,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 			loginLog.setType(1);
 			loginLog.setUserId(user.getId());
 			String loginAddress = Address.getSingleInstance().getAddress(ip);
-//			loginLog.setLoginAddress(loginAddress);
+			loginLog.setLoginAddress(loginAddress);
 			LOGGER.info("ip={} LoginAddres={}", ip,loginAddress);
 			loginLogService.create(loginLog);
 			String securityCode = request.getParameter(Constants.REQUEST_SECURITY_CODE);

@@ -40,7 +40,7 @@ public class Address {
 	/**
 	 * 线程池线程数
 	 */
-	static final Integer threadSize = 1;
+	static final Integer threadSize = 3;
 	/**
 	 * 太平洋ip地址查询接口
 	 */
@@ -85,10 +85,10 @@ public class Address {
 		Long begin = System.currentTimeMillis();
 		// 设置时间戳，防止ip查询接口缓存数据
 		String timeStamp = String.valueOf(begin);
-//		// 太平洋ip接口查询
-//		pool.execute(new AddressPcOnline(ip, timeStamp));
-//		// 淘宝ip接口查询
-//		pool.execute(new AddressTaobao(ip, timeStamp));
+		// 太平洋ip接口查询
+		pool.execute(new AddressPcOnline(ip, timeStamp));
+		// 淘宝ip接口查询
+		pool.execute(new AddressTaobao(ip, timeStamp));
 		// 百度ip接口查询
 		pool.execute(new AddressBaidu(ip, timeStamp));
 		// 开始判断是否查询到结果
