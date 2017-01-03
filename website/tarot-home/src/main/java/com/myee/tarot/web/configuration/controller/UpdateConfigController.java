@@ -452,11 +452,13 @@ public class UpdateConfigController {
                 //--------------------------jsonArray不能被转换成jsonObject---------------------
                 JSONArray jsonArray = JSON.parseArray(latestVersionStr);
                 if( jsonArray == null || jsonArray.size() == 0 ) {
+                    LOGGER.info("boardUpdate latestVersionStr 空数组 ");
                     continue;
                 }
                 String configVersion = jsonArray.getJSONObject(0).getString("version");
                 //配置文件存储的版本号不对，则继续遍历
                 if( configVersion == null || configVersion.equals("") || configVersion.split("-").length != 4 ) {
+                    LOGGER.info("boardUpdate version 不符合要求 ");
                     continue;
                 }
                 String[] configVersionSplit = configVersion.split("-");
@@ -466,15 +468,18 @@ public class UpdateConfigController {
                 String configHardwareVersion = configVersionSplit[2];
                 //如果配置文件的软件版本没有当前配置高，则继续寻找
                 if( configSoftwareVersionNum <= thisSoftwareVersionNum ) {
+                    LOGGER.info("boardUpdate 配置文件版本没有当前版本高 ");
                     continue;
                 }
                 //如果硬件版本不匹配，需要过滤？？？
                 if( !configProductName.equals(productName)
                         || !configHardwareVersion.equals(hardwareVersion)
                         || !configPartCode.equals(thisPartCode)) {
+                    LOGGER.info("boardUpdate 配置文件项目名、硬件版本或头胸手编号不一致 ");
                     continue;
                 }
 
+                LOGGER.info("boardUpdate 全部校验通过");
                 hasUpdatePriority = true;
                 break;
             }
