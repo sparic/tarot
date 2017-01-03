@@ -368,7 +368,7 @@ public class UpdateConfigController {
      *                查找文件规则:升级包都是差分升级包，由1升2,2再升3....，所以查询版本号的时候，是取当前版本号+1的升级包
      * @return
      */
-    @RequestMapping("api/updateConfig/boardUpdate")
+    @RequestMapping(value = {"api/updateConfig/boardUpdate"}, method = RequestMethod.POST)
     @ResponseBody
     public AjaxResponse boardUpdateUrl(@RequestParam(value = "jsonArgs")String jsonArgs) {
         LOGGER.info("boardUpdate jsonArgs= {}", jsonArgs);

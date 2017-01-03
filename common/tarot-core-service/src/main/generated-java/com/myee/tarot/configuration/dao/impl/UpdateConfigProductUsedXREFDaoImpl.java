@@ -63,7 +63,7 @@ public class UpdateConfigProductUsedXREFDaoImpl extends GenericEntityDaoImpl<Lon
 		if(null == productUsed){
 			return null;
 		}
-		query.where(qUpdateConfig.productUsed.eq(productUsed)).orderBy(qUpdateConfig.id.desc());
+		query.where(qUpdateConfig.productUsed.id.eq(productUsed.getId())).orderBy(qUpdateConfig.id.desc());
 		return query.fetch();
 	}
 
