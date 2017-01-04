@@ -399,9 +399,10 @@ public class UpdateConfigController {
             String productName = versionSplit[0];
             String nextSoftwareVersion = calSoftwareVersionNext(versionSplit[1]);
             String thisPartCode = getPartCode(versionSplit[1]);//获取头、胸、手、编号
-            LOGGER.info("boardUpdate thisPartCode= {}",thisPartCode);
             int thisSoftwareVersionNum = getSoftwareVersionNum(versionSplit[1]);
             String hardwareVersion = versionSplit[2];
+            LOGGER.info("boardUpdate thisPartCode= {};productName= {},nextSoftwareVersion= {},thisSoftwareVersionNum= {},hardwareVersion= {}"
+                    ,thisPartCode,productName,nextSoftwareVersion,thisSoftwareVersionNum,hardwareVersion);
 ////            String time = versionSplit[3];
 //            File dest = org.apache.commons.io.FileUtils.getFile(DOWNLOAD_HOME, Constants.BOARD_UPDATE_BASEPATH, productName + "/" + hardwareVersion + "/" + softwareVersion);
 //            LOGGER.info("boardUpdate 文件保存路径:" + dest.getPath());
@@ -466,6 +467,8 @@ public class UpdateConfigController {
                 String configPartCode = getPartCode(configVersionSplit[1]);
                 int configSoftwareVersionNum = getSoftwareVersionNum(configVersionSplit[1]);
                 String configHardwareVersion = configVersionSplit[2];
+                LOGGER.info("boardUpdate configPartCode= {};configProductName= {},configSoftwareVersionNum= {},configHardwareVersion= {}"
+                        ,configPartCode,configProductName,configSoftwareVersionNum,configHardwareVersion);
                 //如果配置文件的软件版本没有当前配置高，则继续寻找
                 if( configSoftwareVersionNum <= thisSoftwareVersionNum ) {
                     LOGGER.info("boardUpdate 配置文件版本没有当前版本高 ");
@@ -485,7 +488,7 @@ public class UpdateConfigController {
             }
 
             if(!hasUpdatePriority) {
-                return AjaxResponse.failed(-1, "未找到该设备组的自研平板升级配置");
+                return AjaxResponse.failed(-1, "未找到该设备组的自研平板可用升级配置");
             }
 
             //有升级权限，则根据路径去找升级配置文件
@@ -537,7 +540,7 @@ public class UpdateConfigController {
     }
 
     /**
-     * 获取当前版本号的数组
+     * 获取当前版本号的数组，比如A007的007
      * @param softVersion
      * @return
      * @throws Exception
