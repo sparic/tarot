@@ -49,7 +49,8 @@
                                 <span ng-switch-default>{{::attr.version}}</span>
                                 <div class="controls" ng-switch-when="true">
                                     <input ng-if="formDataUpdateConfig.model.type == 'module'" type="text" name="attrVersion" ng-model="formDataUpdateConfig.model.attrTemp[$index].version" placeholder="版本号" class="editable-input form-control input-sm" required/>
-                                    <input ng-if="formDataUpdateConfig.model.type != 'module'"type="number" name="attrVersion" ng-model="formDataUpdateConfig.model.attrTemp[$index].version" placeholder="纯数字" class="editable-input form-control input-sm" required/>
+                                    <input ng-if="formDataUpdateConfig.model.type != 'module' && formDataUpdateConfig.model.type != 'self_design_pad'"type="number" name="attrVersion" ng-model="formDataUpdateConfig.model.attrTemp[$index].version" placeholder="纯数字" class="editable-input form-control input-sm" required/>
+                                    <span ng-if="formDataUpdateConfig.model.type == 'self_design_pad'">{{attr.version?attr.version:"自动生成"}}</span>
                                 </div>
                             </td>
                             <td>

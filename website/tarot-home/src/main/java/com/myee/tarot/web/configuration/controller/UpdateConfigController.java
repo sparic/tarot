@@ -114,34 +114,41 @@ public class UpdateConfigController {
             if (updateConfig == null) {
                 return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"配置项不存在");
             }
-            List<ProductUsed> productUsedList = productUsedService.listByIDs(bindList);
+            //只有bindList有数据，才去查询绑定设备组
+            List<ProductUsed> productUsedList = null;
+            if( bindList != null && bindList.size() > 0 ) {
+                productUsedList = productUsedService.listByIDs(bindList);
 
-            if(productUsedList == null || productUsedList.size() == 0) {
-                return AjaxResponse.failed(-1, "设备组参数无效");
+                if(productUsedList == null || productUsedList.size() == 0) {
+                    return AjaxResponse.failed(-1, "设备组参数无效");
+                }
+                updateConfig.setProductUsed(productUsedList);
             }
-            updateConfig.setProductUsed(productUsedList);
+
             updateConfig.setDeviceGroupNOList(bindString);
             updateConfig = updateConfigService.update(updateConfig);
 
             //手动更新关联关系表
             UpdateConfigProductUsedXREF updateConfigProductUsedXREF = null;
             String type = updateConfig.getType();
-            for (ProductUsed productUsed : productUsedList) {
-                UpdateConfigProductUsedXREF updateConfigProductUsedXREF_DB = null;
-                //同一类型下同一设备的绑定关系只能有一条记录，自研平板类型除外
-                if( !type.equals(Constants.UPDATE_TYPE_SELF_DESIGN_PAD) ){
-                    updateConfigProductUsedXREF_DB = updateConfigProductUsedXREFService.getByTypeAndDeviceGroupNO(updateConfig.getType(),productUsed.getCode());
+            if( productUsedList != null && productUsedList.size() > 0 ) {
+                for (ProductUsed productUsed : productUsedList) {
+                    UpdateConfigProductUsedXREF updateConfigProductUsedXREF_DB = null;
+                    //同一类型下同一设备的绑定关系只能有一条记录，自研平板类型除外
+                    if( !type.equals(Constants.UPDATE_TYPE_SELF_DESIGN_PAD) ){
+                        updateConfigProductUsedXREF_DB = updateConfigProductUsedXREFService.getByTypeAndDeviceGroupNO(updateConfig.getType(),productUsed.getCode());
+                    }
+                    if(updateConfigProductUsedXREF_DB != null) {
+                        updateConfigProductUsedXREF = updateConfigProductUsedXREF_DB;
+                    }
+                    else {
+                        updateConfigProductUsedXREF = new UpdateConfigProductUsedXREF();
+                    }
+                    updateConfigProductUsedXREF.setProductUsed(productUsed);
+                    updateConfigProductUsedXREF.setUpdateConfig(updateConfig);
+                    updateConfigProductUsedXREF.setType(updateConfig.getType());
+                    updateConfigProductUsedXREFService.update(updateConfigProductUsedXREF);
                 }
-                if(updateConfigProductUsedXREF_DB != null) {
-                    updateConfigProductUsedXREF = updateConfigProductUsedXREF_DB;
-                }
-                else {
-                    updateConfigProductUsedXREF = new UpdateConfigProductUsedXREF();
-                }
-                updateConfigProductUsedXREF.setProductUsed(productUsed);
-                updateConfigProductUsedXREF.setUpdateConfig(updateConfig);
-                updateConfigProductUsedXREF.setType(updateConfig.getType());
-                updateConfigProductUsedXREFService.update(updateConfigProductUsedXREF);
             }
 
             resp = AjaxResponse.success();
@@ -552,15 +559,13 @@ public class UpdateConfigController {
     }
 
     /**
-     * 获取当前版本号的部位编号，M01,M02等
+     * 获取当前版本号的部位编号，C001M01,C001M02等
      * @param softVersion
      * @return
      * @throws Exception
      */
     private String getPartCode(String softVersion) throws Exception {
-        int length = softVersion.length();
-        //当前软件版本号的数字
-        return softVersion.substring(0, 2);
+        return softVersion.substring(0, 7);
     }
 
     /*分支管理*************************************************************************/

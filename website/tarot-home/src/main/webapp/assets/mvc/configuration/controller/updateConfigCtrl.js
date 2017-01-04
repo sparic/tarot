@@ -423,12 +423,11 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         console.log(model)
         console.log(index)
         console.log(thisRowTemp)
+
         //给thisRowTemp的name赋初值
         thisRowTemp.name = $scope.formDataUpdateConfig.model.attributes[index].name;
 
-        if (!checkThisRowOK(thisRowTemp,index,$scope.formDataUpdateConfig.model.attributes)) {
-            return;
-        }
+
         var _file = $scope.fileList[index];
         if (!_file) {
             $timeout(function () {
@@ -438,6 +437,12 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
             return;
         }
         var fileName = _file.name;
+
+        //自研平板的版本号就是文件名，其他模块是手动输入
+        thisRowTemp.version = ($scope.formDataUpdateConfig.model.type == mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE? $filter('getFileName')(fileName,$scope.mgrUpdateConfigData.constant.FILE_NAME_NO_EXTERN) : thisRowTemp.version);
+        if (!checkThisRowOK(thisRowTemp,index,$scope.formDataUpdateConfig.model.attributes)) {
+            return;
+        }
         //if (thisRow.name != $filter('getFileName')(_file.name, $scope.mgrUpdateConfigData.constant.FILE_NAME_NO_EXTERN)) {
         //除了自研平板，其他名字都是从对照表取
         if ($scope.formDataUpdateConfig.model.type != mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE
@@ -483,6 +488,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                             $timeout(function () {
                                 $filter('toasterManage')(5, fileName + "上传成功!",true);
                             }, 0);
+
                             //复制当前编辑的临时一行到我们要上传的数组
                             $scope.formDataUpdateConfig.model.attributes[index] = {
                                 version: thisRowTemp.version,
