@@ -1,5 +1,6 @@
 package com.myee.tarot.configuration.dao;
 
+import com.myee.tarot.configuration.domain.UpdateConfig;
 import com.myee.tarot.core.dao.GenericEntityDao;
 import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
 
@@ -21,4 +22,6 @@ public interface UpdateConfigProductUsedXREFDao extends GenericEntityDao<Long, U
 	List<UpdateConfigProductUsedXREF> listByTypeAndDeviceGroupNO(String type, String deviceGroupNO);
 
 	List<UpdateConfigProductUsedXREF> listByConfigId(Long configId);
+
+	void deleteByConfigAndDeviceGroupNO(UpdateConfig updateConfig, String deviceGroupNO);
 }

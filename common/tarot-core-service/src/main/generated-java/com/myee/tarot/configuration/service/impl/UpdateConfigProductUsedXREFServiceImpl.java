@@ -1,5 +1,6 @@
 package com.myee.tarot.configuration.service.impl;
 
+import com.myee.tarot.configuration.domain.UpdateConfig;
 import com.myee.tarot.core.service.GenericEntityServiceImpl;
 import com.myee.tarot.configuration.dao.UpdateConfigProductUsedXREFDao;
 import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
@@ -39,5 +40,9 @@ public class UpdateConfigProductUsedXREFServiceImpl extends GenericEntityService
 
 	public List<UpdateConfigProductUsedXREF> listByConfigId(Long configId) {
 		return updateConfigProductUsedXREFDao.listByConfigId(configId);
+	}
+
+	public void deleteByConfigAndDeviceGroupNO(UpdateConfig updateConfig, String deviceGroupNO) {
+		updateConfigProductUsedXREFDao.deleteByConfigAndDeviceGroupNO(updateConfig, deviceGroupNO);
 	}
 }

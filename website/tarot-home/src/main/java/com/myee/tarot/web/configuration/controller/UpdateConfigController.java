@@ -131,22 +131,28 @@ public class UpdateConfigController {
             //手动更新关联关系表
             UpdateConfigProductUsedXREF updateConfigProductUsedXREF = null;
             String type = updateConfig.getType();
+            //先删除该配置关联设备组的关系
+            updateConfigProductUsedXREFService.deleteByConfigAndDeviceGroupNO(updateConfig,null);
             if( productUsedList != null && productUsedList.size() > 0 ) {
                 for (ProductUsed productUsed : productUsedList) {
+                    String deviceGroupNO = productUsed.getCode();
                     UpdateConfigProductUsedXREF updateConfigProductUsedXREF_DB = null;
-                    //同一类型下同一设备的绑定关系只能有一条记录，自研平板类型除外
+                    //同一类型下同一设备的绑定关系只能有一条记录，自研平板类型除外，自研平板一个设备可绑定多个版本。但同版本的记录只能有一个。
                     if( !type.equals(Constants.UPDATE_TYPE_SELF_DESIGN_PAD) ){
-                        updateConfigProductUsedXREF_DB = updateConfigProductUsedXREFService.getByTypeAndDeviceGroupNO(updateConfig.getType(),productUsed.getCode());
+                        updateConfigProductUsedXREF_DB = updateConfigProductUsedXREFService.getByTypeAndDeviceGroupNO(type,deviceGroupNO);
                     }
+                    //非自研平板直接更新数据库关系数据
                     if(updateConfigProductUsedXREF_DB != null) {
+//                        updateConfigProductUsedXREFService.deleteByConfigAndDeviceGroupNO(updateConfig,deviceGroupNO);
                         updateConfigProductUsedXREF = updateConfigProductUsedXREF_DB;
                     }
+                    //自研平板则新建关系
                     else {
                         updateConfigProductUsedXREF = new UpdateConfigProductUsedXREF();
                     }
                     updateConfigProductUsedXREF.setProductUsed(productUsed);
                     updateConfigProductUsedXREF.setUpdateConfig(updateConfig);
-                    updateConfigProductUsedXREF.setType(updateConfig.getType());
+                    updateConfigProductUsedXREF.setType(type);
                     updateConfigProductUsedXREFService.update(updateConfigProductUsedXREF);
                 }
             }
@@ -316,7 +322,7 @@ public class UpdateConfigController {
         entry.put("seeTypeName", (seeType == null || "".equals(seeType)) ? "" : new UpdateConfigSeeType().getUpdateConfigSeeTypeName(seeType));
         entry.put("createTime", updateConfig.getCreateTime());
         entry.put("path", updateConfig.getPath());
-        entry.put("boardNoList", updateConfig.getPath());
+        entry.put("boardNoList", updateConfig.getDeviceGroupNOList());
         entry.put("productUsedList", listBindProductUsedByConfig(updateConfig));
         return entry;
     }
