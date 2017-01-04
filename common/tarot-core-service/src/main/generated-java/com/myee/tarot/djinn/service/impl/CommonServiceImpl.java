@@ -174,6 +174,11 @@ public class CommonServiceImpl implements CommonService, TransactionalAspectAwar
 		return true;
 	}
 
+	@Override
+	public boolean sendEmail(String jsonArgs) throws RemoteException {
+		return false;
+	}
+
 	private VersionInfo readfile(File file) {
 		SAXReader saxReader = new SAXReader();
 		JSONObject object = new JSONObject();
