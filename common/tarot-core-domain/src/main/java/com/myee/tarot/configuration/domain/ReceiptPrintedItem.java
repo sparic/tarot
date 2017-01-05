@@ -17,7 +17,7 @@ public class ReceiptPrintedItem extends GenericEntity<Long, ReceiptPrintedItem> 
     protected Long id;
 
     @Column(name= "ITEM_TYPE")
-    private boolean itemType; //栏目类型(变量，常量)
+    private String itemType; //栏目类型(变量，常量)
 
     @Column(name= "IS_NEWLINE")
     private boolean isNewline; //是否换行 0为换行 1为不换行
@@ -34,6 +34,9 @@ public class ReceiptPrintedItem extends GenericEntity<Long, ReceiptPrintedItem> 
     @Column(name= "SIZE")
     private String size; //大小
 
+    @Column(name= "QRSIZE")
+    private String qrsize; //二维码大小
+
     @Column(name= "ALIGN")
     private String align; //对齐方式(1.左对齐，2，居中，3.右对齐)
 
@@ -45,11 +48,11 @@ public class ReceiptPrintedItem extends GenericEntity<Long, ReceiptPrintedItem> 
     @org.hibernate.annotations.Index(name = "RECEIPT_ITEM_INDEX", columnNames = {"RECEIPT_ID"})
     protected ReceiptPrinted receiptPrinted;
 
-    public boolean isItemType() {
+    public String getItemType() {
         return itemType;
     }
 
-    public void setItemType(boolean itemType) {
+    public void setItemType(String itemType) {
         this.itemType = itemType;
     }
 
@@ -125,5 +128,13 @@ public class ReceiptPrintedItem extends GenericEntity<Long, ReceiptPrintedItem> 
 
     public void setReceiptPrinted(ReceiptPrinted receiptPrinted) {
         this.receiptPrinted = receiptPrinted;
+    }
+
+    public String getQrsize() {
+        return qrsize;
+    }
+
+    public void setQrsize(String qrsize) {
+        this.qrsize = qrsize;
     }
 }

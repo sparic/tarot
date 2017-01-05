@@ -549,6 +549,21 @@ function routerAll(baseUrl){
                 }
             }
         },
+        'datacenter.agentlog': {
+            url: "/agentlog",
+            templateUrl: "assets/mvc/desktop/view/manager.html",
+            controller: 'agentLogCtrl',
+            data: {
+                pageTitle: '数据中心',
+                subTitle: 'Agent日志',
+                datatable: 'assets/mvc/datacenter/view/agentLog_datatable.html'
+            },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return ctrlManagerLoader($ocLazyLoad, 'datacenter', 'agentLogCtrl.js')
+                }
+            }
+        },
         'user': {
             abstract: true,
             url: "/user",
@@ -698,7 +713,7 @@ function routerAll(baseUrl){
             },
             resolve: {
                 loadPlugin: function ($ocLazyLoad) {
-                    return ctrlManagerLoader($ocLazyLoad, 'configuration', 'configurationCtrl.js')
+                    return ctrlManagerLoader($ocLazyLoad, 'configuration', 'receiptPrintedCtrl.js')
                 }
             }
         },
@@ -740,7 +755,7 @@ function routerAll(baseUrl){
             controller: 'mailContactConfigCtrl',
             data: {
                 pageTitle: '配置管理',
-                subTitle: '联系人管理',
+                subTitle: '联系人配置',
                 datatable: 'assets/mvc/configuration/view/contactConfig_datatable.html',
                 editor: 'assets/mvc/configuration/view/contactConfig_editor.html',
             },

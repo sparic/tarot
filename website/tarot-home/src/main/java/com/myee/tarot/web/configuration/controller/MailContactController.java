@@ -108,16 +108,16 @@ public class MailContactController {
     }
 
 
-    @RequestMapping(value = "admin/configuration/mailcontact/sendmail", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxResponse sendEmail (@RequestParam(value = "context") String context, @RequestParam(value = "subject") String subject) {
-        List<MailContact> contactList = mailContactService.list();
-        int size = contactList.size();
-        String[] contactArr = new String[size];
-        for (int i = 0; i < size; i++) {
-            contactArr[i] = contactList.get(i).getMailAddress();
-        }
-        return emailSenderUtil.send(Constants.MAIL_SENDER_ACCOUNT, contactArr, subject, context);
-    }
+//    @RequestMapping(value = "admin/configuration/mailcontact/sendmail", method = RequestMethod.POST)
+//    @ResponseBody
+//    public AjaxResponse sendEmail (@RequestParam(value = "context") String context, @RequestParam(value = "subject") String subject) {
+//        List<MailContact> contactList = mailContactService.list();
+//        int size = contactList.size();
+//        String[] contactArr = new String[size];
+//        for (int i = 0; i < size; i++) {
+//            contactArr[i] = contactList.get(i).getMailAddress();
+//        }
+//        return emailSenderUtil.send(Constants.MAIL_SENDER_ACCOUNT, contactArr, subject, context);
+//    }
 
 }

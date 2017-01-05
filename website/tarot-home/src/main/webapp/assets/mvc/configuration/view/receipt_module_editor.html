@@ -5,7 +5,7 @@
                 <i class="fa fa-info"></i>小票模板配置
             </uib-tab-heading>
             <div class="panel-body formly">
-                <form name="formData.form" class="formly-field" novalidate>
+                <form name="formData.form" class="formly-field">
                     <formly-form model="formDataReceiptModule.model" fields="formDataReceiptModule.fields" form="formDataReceiptModule.form" options="formDataReceiptModule.options">
                         <label class="col-sm-2 control-label ">
                             配置详细
@@ -44,13 +44,11 @@
                                 </tr>
                                 <tr ng-repeat="attr in formDataReceiptModule.model.attributes" ng-switch="attr.editing" ng-if="attr.show">
                                     <td>
-                                        <span ng-switch-default ng-if="attr.itemType == 1">变量</span>
-                                        <span ng-switch-default ng-if="attr.itemType == 0">常量</span>
+                                        <span ng-switch-default ng-repeat="o in allItemType" ng-if="attr.itemType == o.value">{{o.name}}</span>
                                         <div class="controls" ng-switch-when="true">
                                             <select ng-model="attr.itemType">
-                                                <option value="" ng-selected="attr.itemType == null">无</option>
-                                                <option value="1" ng-selected="attr.itemType == 1">变量</option>
-                                                <option value="0" ng-selected="attr.itemType == 0">常量</option>
+                                                <option value="" ng-selected="attr.itemType == ''">无</option>
+                                                <option ng-repeat="o in allItemType" value="{{o.value}}" ng-selected="attr.itemType == o.value">{{o.name}}</option>
                                             </select>
                                         </div>
                                     </td>
@@ -68,10 +66,9 @@
                                     <td>
                                         <span ng-switch-default>{{::attr.font}}</span>
                                         <div class="controls" ng-switch-when="true">
-                                            <select name="attrDescription" ng-model="attr.font" placeholder="字体" class="editable-input form-control input-sm" required>
+                                            <select name="attrDescription" ng-model="attr.font" placeholder="字体">
                                                 <option value="" ng-selected="attr.size == ''">无</option>
-                                                <option value="normal" ng-selected="attr.size == 'normal'">标准</option>
-                                                <option value="double" ng-selected="attr.size == 'double'">两倍</option>
+                                                <option ng-repeat="o in allItemFontType" value="{{o.value}}">{{o.name}}</option>
                                             </select>
                                         </div>
                                     </td>
@@ -87,13 +84,16 @@
                                         </div>
                                     </td>
                                     <td class="center">
-                                        <span ng-switch-default ng-if="attr.size == 'normal'">标准</span>
-                                        <span ng-switch-default ng-if="attr.size == 'double'">两倍</span>
+                                        <span ng-switch-default ng-repeat="o in allItemSizeType" ng-if="attr.itemType != 'QRCODE' && attr.size == o.value">{{o.name}}</span>
+                                        <span ng-switch-default ng-repeat="o in allItemQrSizeType" ng-if="attr.itemType == 'QRCODE' && attr.qrsize == o.value">{{o.name}}</span>
                                         <div class="controls" ng-switch-when="true">
-                                            <select ng-model="attr.size">
+                                            <select ng-if="attr.itemType != 'QRCODE'" ng-model="attr.size">
                                                 <option value="" ng-selected="attr.size == ''">无</option>
-                                                <option value="normal" ng-selected="attr.size == 'normal'">标准</option>
-                                                <option value="double" ng-selected="attr.size == 'double'">两倍</option>
+                                                <option ng-repeat="o in allItemSizeType" value="{{o.value}}" ng-selected="attr.size == o.value">{{o.name}}</option>
+                                            </select>
+                                            <select ng-if="attr.itemType == 'QRCODE'" ng-model="attr.qrsize">
+                                                <option value="" ng-selected="attr.qrsize == ''">无</option>
+                                                <option ng-repeat="o in allItemQrSizeType" value="{{o.value}}">{{o.name}}</option>
                                             </select>
                                         </div>
                                     </td>
@@ -115,7 +115,7 @@
                                         <span ng-switch-default ng-if="attr.isUnderline == 0">否</span>
                                         <div class="controls" ng-switch-when="true">
                                             <select ng-model="attr.isUnderline">
-                                                <option value="" ng-selected="attr.isUnderline == null">无</option>
+                                                <option value="" ng-selected="attr.isUnderline == ''">无</option>
                                                 <option value="1" ng-selected="attr.isUnderline == 1">是</option>
                                                 <option value="0" ng-selected="attr.isUnderline == 0">否</option>
                                             </select>

@@ -1,6 +1,6 @@
 <add-rights ng-click="goEditReceiptPrinted()" content="新增小票模板"></add-rights>
-<!--<a class="btn btn-sm btn-danger" ng-click="goEditReceiptPrinted()"><i class="ace-icon fa fa-plus bigger-120"></i>新增小票模板</a>-->
 <div class="space-6"></div>
+<advanced-search title="模板名称"></advanced-search>
 <div class="space-6"></div>
 <div class="row">
     <div class="col-xs-12">
@@ -23,18 +23,13 @@
                         </tr>
                         <tr ng-repeat="row in $data">
                             <td>{{::row.moduleName}}</td>
-                            <td ng-if="row.receiptType == 1">抽奖</td>
-                            <td ng-if="row.receiptType == 2">排号</td>
+                            <td>{{::row.receiptTypeText}}</td>
                             <td>{{::row.description}}</td>
                             <td>{{::row.updateTime}}</td>
                             <td class="center works">
                                 <table-rights tooltip="{{lang_zh.bindProduct}}" ng-click="goDeviceBindProductEditor($index)" type="u" tclass="fa-bars"></table-rights>
-
-                                <!--<a ng-click="goDeviceBindProductEditor($index)" tooltip-placement="top" uib-tooltip="{{lang_zh.bindProduct}}"><i class="btn-icon fa fa-bars"></i></a>-->
-                                <span class="divider"></span>
-                                <a ng-click="goEditReceiptPrinted($index)" tooltip-placement="top" uib-tooltip="{{lang_zh.edit}}"><i class="btn-icon fa fa-pencil"></i></a>
-                                <span class="divider"></span>
-                                <a ng-click="doDelete($index)" tooltip-placement="top" uib-tooltip="{{lang_zh.delete}}"><i class="btn-icon fa fa-trash-o"></i></a>
+                                <table-rights tooltip="{{lang_zh.edit}}" ng-click="goEditReceiptPrinted($index)" type="u" tclass="fa-pencil"></table-rights>
+                                <table-rights tooltip="{{lang_zh.delete}}" ng-click="doDelete($index)" type="d" tclass="fa-trash-o"></table-rights>
                             </td>
                         </tr>
                         </tbody>

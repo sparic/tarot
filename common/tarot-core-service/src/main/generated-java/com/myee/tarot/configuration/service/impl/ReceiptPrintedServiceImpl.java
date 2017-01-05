@@ -6,6 +6,7 @@ import com.myee.tarot.configuration.domain.ReceiptPrinted;
 import com.myee.tarot.configuration.service.ReceiptPrintedService;
 import com.myee.tarot.core.service.GenericEntityServiceImpl;
 import com.myee.tarot.core.util.PageResult;
+import com.myee.tarot.core.util.WhereRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class ReceiptPrintedServiceImpl extends GenericEntityServiceImpl<Long, Re
     }
 
     @Override
-    public PageResult<ReceiptPrinted> listByMerchantStoreId(Long id) {
-        return receiptPrintedDao.listByMerchantStoreId(id);
+    public PageResult<ReceiptPrinted> listByMerchantStoreId(WhereRequest whereRequest, Long id) {
+        return receiptPrintedDao.listByMerchantStoreId(whereRequest, id);
     }
 }

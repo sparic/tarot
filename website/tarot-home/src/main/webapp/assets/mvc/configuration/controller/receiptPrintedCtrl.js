@@ -38,7 +38,7 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
                 type: 'c_select',
                 className: 'c_select',
                 templateOptions: {
-                    label: '模板类型',required: true, options: [{name:'抽奖', value:'1'},{name:'排号', value:'2'}]
+                    label: '模板类型',required: true, options: cResource.query('./configuration/receiptPrinted/listModuleType')
                 }
             },
             {
@@ -407,5 +407,13 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
             thisRow.editing = false;
         // });
     };
+
+    $scope.allItemType = cResource.query('./configuration/receiptPrinted/listModuleItemType');
+
+    $scope.allItemFontType = cResource.query('./configuration/receiptPrinted/listModuleItemFontType');
+
+    $scope.allItemSizeType = cResource.query('./configuration/receiptPrinted/listModuleItemSizeType');
+
+    $scope.allItemQrSizeType = cResource.query('./configuration/receiptPrinted/listModuleItemQrSizeType');
 
 }

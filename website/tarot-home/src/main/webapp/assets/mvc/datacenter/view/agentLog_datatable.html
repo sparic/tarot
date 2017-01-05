@@ -1,0 +1,11 @@
+<div class="alert alert-info"  ng-if="'r' | routers">
+    <div class="form-inline">
+        <div class="form-group">
+            <select class="form-control">
+                <option ng-repeat="o in allDeviceUsed" value="{{o.value}}">{{o.name}}</option>
+            </select>
+            <button class="btn btn-sm btn-danger m-l" type="button" ng-click="pullLog()"><i
+                    class="fa fa-search"></i><span class="bold">拉取日志</span></button>
+        </div>
+    </div>
+</div>

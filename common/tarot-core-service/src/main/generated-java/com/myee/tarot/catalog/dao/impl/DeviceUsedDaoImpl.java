@@ -36,7 +36,7 @@ public class DeviceUsedDaoImpl extends GenericEntityDaoImpl<Long, DeviceUsed> im
         if(id != null) {
             query.where(qDeviceUsed.store.id.eq(id));
         }
-        if (whereRequest.getQueryObj() != null) {
+        if (whereRequest != null && whereRequest.getQueryObj() != null) {
             JSONObject map = JSON.parseObject(whereRequest.getQueryObj());
             Object optionName = map.get(Constants.SEARCH_OPTION_NAME);
             Object storeName = map.get(Constants.SEARCH_OPTION_STORE_NAME);
@@ -54,12 +54,12 @@ public class DeviceUsedDaoImpl extends GenericEntityDaoImpl<Long, DeviceUsed> im
             if (deviceNum != null && !StringUtil.isBlank(deviceNum.toString())) {
                 query.where(qDeviceUsed.deviceNum.like("%" + deviceNum.toString() + "%"));
             }
-        } else if(!StringUtil.isBlank(whereRequest.getQueryName())){
+        } else if(whereRequest != null && !StringUtil.isBlank(whereRequest.getQueryName())){
             query.where(qDeviceUsed.name.like("%" + whereRequest.getQueryName() + "%"));
         }
         pageList.setRecordsTotal(query.fetchCount());
         query.orderBy(qDeviceUsed.name.asc());
-        if( whereRequest.getCount() > Constants.COUNT_PAGING_MARK){
+        if(whereRequest != null && whereRequest.getCount() > Constants.COUNT_PAGING_MARK){
             query.offset(whereRequest.getOffset()).limit(whereRequest.getCount());
         }
         pageList.setList(query.fetch());

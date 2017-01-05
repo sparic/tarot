@@ -3,7 +3,6 @@ angular.module('myee', [])
 
 mailContactConfigCtrl.$inject = ['$scope', 'Constants', 'cTables', 'cfromly', 'cAlerts'];
 function mailContactConfigCtrl($scope, Constants, cTables, cfromly, cAlerts) {
-    var iDatatable = 0, iEditor = 1;
     var mgrData = $scope.mgrData = {
         fields: [
             {
@@ -24,5 +23,5 @@ function mailContactConfigCtrl($scope, Constants, cTables, cfromly, cAlerts) {
         }
     };
     cTables.initNgMgrCtrl(mgrData, $scope);
-    
+
 }

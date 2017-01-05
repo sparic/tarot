@@ -283,6 +283,26 @@ public class DeviceController {
         return null;
     }
 
+    @RequestMapping(value = {"admin/device/used/listAll", "shop/device/used/listAll"}, method = RequestMethod.GET)
+    @ResponseBody
+    public List deviceUsedAllList(HttpServletRequest request) {
+        List resp = new ArrayList();
+        try {
+            PageResult<DeviceUsed> pageList = deviceUsedService.pageByStore(null, null);
+            List<DeviceUsed> deviceUsedList = pageList.getList();
+            for (DeviceUsed deviceUsed : deviceUsedList) {
+                Map entry = new HashMap();
+                entry.put("name", deviceUsed.getName());
+                entry.put("value", deviceUsed.getBoardNo());
+                resp.add(entry);
+            }
+            return resp;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(),e);
+        }
+        return null;
+    }
+
     @RequestMapping(value = {"admin/device/used/update", "shop/device/used/update"}, method = RequestMethod.POST)
     @ResponseBody
     public AjaxResponse saveUsedProduct(@Valid @RequestBody DeviceUsed deviceUsed, @RequestParam(value = "autoStart") Long autoStart, @RequestParam(value = "autoEnd") Long autoEnd, HttpServletRequest request) throws Exception {
