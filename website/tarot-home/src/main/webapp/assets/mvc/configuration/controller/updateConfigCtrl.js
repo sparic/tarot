@@ -176,7 +176,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         if(Constants.thisMerchantStore.id == mgrUpdateConfigData.constant.DEFAULT_MERCHANT_STORE) {
             return true;
         }
-        $filter('toasterManage')(5, "当前切换的门店没有操作权限",false);
+        $filter('toasterManage')(5, "当前切换的门店没有操作权限，请切换到100门店",false);
         return false;
     }
 
