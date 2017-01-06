@@ -4,34 +4,36 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.myee.djinn.rpc.util.CryptoUtil;
 import com.myee.tarot.admin.domain.AdminUser;
 import com.myee.tarot.core.Constants;
 import com.myee.tarot.core.util.StringUtil;
 import com.myee.tarot.core.util.ajax.AjaxResponse;
+import com.myee.tarot.fileUpload.domain.FileUpload;
+import com.myee.tarot.fileUpload.service.FileUploadService;
 import com.myee.tarot.merchant.domain.MerchantStore;
-import com.myee.tarot.web.ClientAjaxResult;
 import com.myee.tarot.web.apiold.util.CommonLoginParam;
 import com.myee.tarot.web.apiold.util.FileValidCreateUtil;
-import com.myee.tarot.web.files.FileDTO;
-import com.myee.tarot.web.files.HotfixSetVo;
-import com.myee.tarot.web.files.HotfixVo;
-import com.myee.tarot.web.files.TreeFileItem;
+import com.myee.tarot.web.files.*;
 import jodd.io.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.*;
 
 /**
@@ -41,6 +43,9 @@ import java.util.*;
 public class FilesController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FilesController.class);
+
+    @Autowired
+    private FileUploadService fileUploadService;
 
     @Value("${cleverm.push.dirs}")
     private String DOWNLOAD_HOME;
@@ -481,6 +486,137 @@ public class FilesController {
             LOGGER.error("unable to delete the folder!");
         }
         return false;
+    }
+
+
+    //-----------------------------为了视觉心理分析平台视频传输-----------------------------------
+
+    /**
+     * 上传大个文件 支持断点续传
+     *
+     * @return
+     * @throws IllegalStateException
+     * @throws IOException
+     */
+    @RequestMapping(value = "services/public/files/largeUpload", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResponse uploadLargeFile(HttpServletRequest request) throws IllegalStateException, IOException {
+        String fileName = request.getParameter("fileName");
+        InputStream in = request.getInputStream();
+        RandomAccessFile tempRandAccessFile = null;
+        long length = request.getContentLength();
+        File real = null;
+        File temp = null;
+        boolean isSuccess = false;
+        try {
+            File upload = FileUtils.getFile(DOWNLOAD_HOME, "upload");
+            upload.mkdirs();
+            real = FileUtils.getFile(upload.getPath(), File.separator + fileName);
+            temp = FileUtils.getFile(upload.getPath(), File.separator + fileName + ".tmp");
+            if(real.exists()) {
+                return AjaxResponse.success();
+            }else {
+                long needSkipBytes = 0;
+                if(temp.exists()){
+                    //续一哈
+                    needSkipBytes = temp.length();
+                } else {
+                    temp.createNewFile();
+                }
+                System.out.println("跳过字节数为：" + needSkipBytes);
+                //in.skip(needSkipBytes);
+                tempRandAccessFile = new RandomAccessFile(temp, "rw");
+                tempRandAccessFile.seek(needSkipBytes);
+                byte[] buffer = new byte[4096];
+                int l;
+                if(length < 0L) {
+                    while((l = in.read(buffer)) != -1) {
+                        tempRandAccessFile.write(buffer, 0, l);
+                    }
+                } else {
+                    for(long remaining = length - needSkipBytes; remaining > 0L; remaining -= (long)l) {
+                        l = in.read(buffer, 0, (int)Math.min(4096L, remaining));
+                        if(l == -1) {
+                            break;
+                        }
+                        tempRandAccessFile.write(buffer, 0, l);
+                    }
+                }
+                isSuccess = true;
+            }
+            // 传输成功后，添加至数据库
+            FileUpload uploadFile = fileUploadService.getByName(fileName);
+            if(uploadFile !=null){
+                uploadFile.setUpdateTime(new Date());
+                uploadFile.setLength(temp.length());
+                uploadFile.setStatus(Constants.FILE_OK);
+                //uploadFile.setMd5(FileValidCreateUtil.fileMD5(real.getAbsolutePath()));
+                fileUploadService.update(uploadFile);
+            }else {
+                FileUpload newFile = new FileUpload();
+                newFile.setCreateTime(new Date());
+                newFile.setUpdateTime(newFile.getCreateTime());
+                newFile.setLength(temp.length());
+                newFile.setName(fileName);
+                newFile.setStatus(Constants.FILE_OK);
+                newFile.setPath(real.getPath());
+                // newFile.setMd5(FileValidCreateUtil.fileMD5(real.getAbsolutePath()));
+                fileUploadService.save(newFile);
+            }
+            return AjaxResponse.success();
+
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return AjaxResponse.failed(-1);
+
+        } finally {
+            try {
+                in.close();
+                if(tempRandAccessFile !=null) {
+                    tempRandAccessFile.close();
+                }
+                if(isSuccess){
+                    temp.renameTo(real);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 判定是否已存在此文件
+     * @param name  文件名称
+     * @param md5   文件md5
+     */
+    @RequestMapping(value = "services/public/files/isExistFile",method = RequestMethod.POST)
+    @ResponseBody
+    public FileResult isExistFile(@RequestParam(value = "fileName")String name,
+                                  @RequestParam(value = "md5",required = false)String md5){
+        FileResult result = new FileResult();
+        try {
+            FileUpload existFile = fileUploadService.getByName(name);
+            if(existFile != null ){
+                //若存在 直接
+                result.setExist(true);
+            }else {
+                //若不存在,是否存在临时文件
+                result.setExist(false);
+                File upload = FileUtils.getFile(DOWNLOAD_HOME, "upload");
+                File temp = FileUtils.getFile(upload.getAbsolutePath(),name + ".tmp");
+                if(temp.exists()&& temp.isFile()){
+                    result.setTemp(true);
+                    result.setSize(temp.length());
+                }else {
+                    result.setTemp(false);
+                }
+            }
+            result.setStatus(0);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new FileResult(1);
+        }
     }
 
 

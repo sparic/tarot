@@ -116,6 +116,10 @@ public class Constants {
 	public final static int ES_QUERY_PATTERN_SHOULD = 0;
 	public final static int ES_QUERY_PATTERN_MUST = 1;
 
+	//文件上传状态
+	public final static Integer FILE_OK = 0; //传输成功
+	public final static Integer FILE_FAIL = 1;  //传输失败
+
 	//小超人 抽奖券开启状态
 	public final static Boolean CLIENT_PRIZE_ACTIVE_YES = true;
 	public final static Boolean CLIENT_PRIZE_ACTIVE_NO = false;
