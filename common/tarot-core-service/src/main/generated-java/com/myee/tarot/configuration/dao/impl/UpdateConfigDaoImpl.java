@@ -40,6 +40,10 @@ public class UpdateConfigDaoImpl extends GenericEntityDaoImpl<Long, UpdateConfig
 			if (obj != null && !StringUtil.isBlank(obj.toString())) {
 				query.where(qUpdateConfig.seeType.eq(obj.toString()));
 			}
+			obj = map.get(Constants.SEARCH_UPDATE_CONFIG_BRANCH_ID);
+			if (obj != null && !StringUtil.isBlank(obj.toString())) {
+				query.where(qUpdateConfig.branchConfig.id.eq(Long.parseLong(obj.toString())));
+			}
 			//TODO  临时处理，前端未找到好的处理方式
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			obj = map.get(Constants.SEARCH_BEGIN_DATE);

@@ -21,16 +21,16 @@ public class UpdateConfig extends GenericEntity<Long, UpdateConfig> {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
     private Long id;
 
-    @Column(name = "NAME", nullable = false,length = 60)
+    @Column(name = "NAME", nullable = false,length = 200)
     protected String name;//配置文件名
 
     @Column(name = "DESCRIPTION",length = 255)
     protected String description;
 
-    @Column(name = "TYPE",nullable = false,length = 30)
+    @Column(name = "TYPE",nullable = false,length = 200)
     protected String type;//配置文件类型:apk,module等
 
-    @Column(name = "SEE_TYPE",nullable = false,length = 30)
+    @Column(name = "SEE_TYPE",nullable = false,length = 200)
     private String seeType;//CHECKED：勾选设备可见，ALL：所有设备可见，NONE：所有设备不可见
 
     @Column(name = "CREATE_TIME")
@@ -41,6 +41,10 @@ public class UpdateConfig extends GenericEntity<Long, UpdateConfig> {
 
     @Column(name = "DEVICE_GROUP_NO_LIST",columnDefinition = "TEXT")
     private String deviceGroupNOList;//勾选设备列表,作为历史记录
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = BranchConfig.class)
+    @JoinColumn(name = "BRANCH", referencedColumnName = "CONFIG_ID")
+    private BranchConfig branchConfig;
 
     @Transient //供前端显示用，不关联查询出来
     protected List<ProductUsed> productUsed = new ArrayList<ProductUsed>();
@@ -117,5 +121,13 @@ public class UpdateConfig extends GenericEntity<Long, UpdateConfig> {
 
     public void setProductUsed(List<ProductUsed> productUsed) {
         this.productUsed = productUsed;
+    }
+
+    public BranchConfig getBranchConfig() {
+        return branchConfig;
+    }
+
+    public void setBranchConfig(BranchConfig branchConfig) {
+        this.branchConfig = branchConfig;
     }
 }

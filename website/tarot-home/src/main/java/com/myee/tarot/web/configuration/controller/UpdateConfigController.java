@@ -324,6 +324,7 @@ public class UpdateConfigController {
         entry.put("path", updateConfig.getPath());
         entry.put("boardNoList", updateConfig.getDeviceGroupNOList());
         entry.put("productUsedList", listBindProductUsedByConfig(updateConfig));
+        entry.put("branchConfig", updateConfig.getBranchConfig());
         return entry;
     }
 
@@ -614,7 +615,7 @@ public class UpdateConfigController {
             return AjaxResponse.success();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"出错");
+            return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"可能在其他地方被使用");
         }
     }
 
@@ -650,5 +651,25 @@ public class UpdateConfigController {
         return entry;
     }
 
+    @RequestMapping(value = {"admin/configuration/branch/list4Select"}, method = RequestMethod.GET)
+    @ResponseBody
+    public List branchList(HttpServletRequest request) {
+        AjaxResponse resp = new AjaxResponse();
+        try {
+            WhereRequest whereRequest = new WhereRequest();
+            whereRequest.setCount(-1);//不分页，查询所有结果
+            List<BranchConfig> branchConfigList = branchConfigService.list();
+            for (BranchConfig branchConfig : branchConfigList) {
+                Map entry = new HashMap();
+                entry.put("name", branchConfig.getName()+"-"+branchConfig.getSubName());
+                entry.put("value", branchConfig.getId());
+                resp.addDataEntry(entry);
+            }
+            return resp.getRows();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(),e);
+            return null;
+        }
+    }
 
 }

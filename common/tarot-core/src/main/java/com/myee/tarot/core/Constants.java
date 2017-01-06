@@ -461,4 +461,6 @@ public class Constants {
 
 	public static final String SEARCH_UPDATE_CONFIG_SEE_TYPE = "seeType";
 
+	public static final String SEARCH_UPDATE_CONFIG_BRANCH_ID = "branchConfig.id";
+
 }

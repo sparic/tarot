@@ -647,12 +647,17 @@ function cResource($resource,$filter,$q){
             console.log('联系管理员');
             return false;
         }
-        var respData = angular.fromJson(data);
-        if(respData.status && respData.status == baseUrl.accessDeni){
-            window.location.href=respData.rows[0].accessDeni;
-            return false;
+        if(data){
+            var respData = angular.fromJson(data);
+            if(respData.status && respData.status == baseUrl.accessDeni){
+                window.location.href=respData.rows[0].accessDeni;
+                return false;
+            }
+            return angular.fromJson(data);
         }
-        return angular.fromJson(data);
+        else {
+            console.log("data为空")
+        }
     }
     //
     function _http(url){

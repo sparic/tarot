@@ -19,6 +19,10 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
     function getSeeTypeList() {
         return cResource.query('./updateConfig/listSeeType');
     }
+    //查询分支下拉框内容
+    function getBranchList() {
+        return cResource.query('./configuration/branch/list4Select');
+    }
     function getTypeDisabled() {
         return $scope.typeDisabled;
     }
@@ -59,6 +63,18 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                     label: '设备可见范围',
                     placeholder: '设备组名称',
                     options: getSeeTypeList(),
+                    isSearch:true
+                }
+            },
+            {
+                key: 'branchConfig.id',
+                type: 'c_select',
+                className: 'c_select',
+                templateOptions: {
+                    required: true,
+                    label: '分支',
+                    placeholder: '分支',
+                    options: getBranchList(),
                     isSearch:true
                 }
             },
@@ -365,6 +381,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                     seeType:model.seeType,
                     createTime:$scope.createTimeMills,
                     path:pathNoFileName + '/' + baseInfo.FILE_NAME,
+                    branchConfig:model.branchConfig
                 }
                 cResource.save($scope.mgrUpdateConfigData.api.update,{},dataConfig).then(function (resp1) {
                     $scope.disableSubmit = false;

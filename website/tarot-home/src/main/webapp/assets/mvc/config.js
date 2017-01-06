@@ -130,7 +130,7 @@ function routerAll(baseUrl){
             }
         },
         'campaign.clientprize': {
-            url: "/clientPrize",
+            url: "/clientprize",
             templateUrl: "assets/mvc/desktop/view/manager.html",
             controller: 'clientPrizeCtrl',
             data: {

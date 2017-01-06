@@ -36,8 +36,6 @@ public class BranchConfig extends GenericEntity<Long, BranchConfig> {
     @Column(name = "CREATE_TIME")
     private Date createTime;
 
-
-
     @Override
     public Long getId() {
         return id;
