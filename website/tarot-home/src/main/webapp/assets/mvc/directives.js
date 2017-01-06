@@ -318,7 +318,7 @@ function cDatepicker(){
     }
 
     return {
-        template:'<div class="input-group"><input uib-datepicker-popup placeholder="{{placeholder}}" type="text"  ng-model="model" ng-model-options="{ timezone: \'+0800\' }" class="form-control" ng-click="datepicker.open($event)" is-open="datepicker.opened" datepicker-options="datepicker.dateOptions" /> <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="datepicker.open($event)"><i class="fa fa-calendar"></i></button></span> </div>',
+        template:'<div class="input-group"><input uib-datepicker-popup placeholder="{{placeholder}}" type="date"  ng-model="model" ng-model-options="{ timezone: \'GMT\' }" class="form-control" ng-click="datepicker.open($event)" is-open="datepicker.opened" datepicker-options="datepicker.dateOptions" /> <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="datepicker.open($event)"><i class="fa fa-calendar"></i></button></span> </div>',
         replace: true,
         scope:{
             placeholder:'@placeholder',
@@ -326,8 +326,8 @@ function cDatepicker(){
             day:'='
         },
         link:function(scope,ele,attr){
-            var d = fd(scope.day?parseInt(scope.day):0);
-            scope.model = new Date(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate());
+            //var d = fd(scope.day?parseInt(scope.day):0);
+            //scope.model = new Date(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate());
             //datepicker配置
             scope.datepicker = {
                 opened:false,
