@@ -537,8 +537,8 @@ function advancedSearch($filter){
  * */
 function tableRights($filter){
     return {
-        template:'<a class="line" ng-if="show" tooltip-placement="top" uib-tooltip="{{tooltip}}"><i class="btn-icon fa {{tclass}}"></i></a>',
-        //replace: true,
+        template:'<a class="line" ng-show="show" tooltip-placement="top" uib-tooltip="{{tooltip}}"><i class="btn-icon fa {{tclass}}"></i></a>',
+        replace: true,
         scope: {
             "tooltip": "@tooltip",
             "type": "@type",
