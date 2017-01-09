@@ -42,12 +42,11 @@ public class EmailSenderUtil {
 			message.setSubject(subject);
 			message.setText(context);
 			email.send(message);
-			AjaxResponse.success("发送成功!");
+			return AjaxResponse.success("发送成功!");
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			return AjaxResponse.failed(-1, "发送失败!");
 		}
-			return null;
 	}
 
 	public static void main(String[] args) {
