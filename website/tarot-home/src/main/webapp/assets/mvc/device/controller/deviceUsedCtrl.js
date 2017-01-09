@@ -279,6 +279,11 @@ function deviceUsedCtrl($scope, cResource, Constants, cTables, cfromly, NgTableP
                 autoEnd: formly.model.endNo ? formly.model.endNo : ""
             }, formly.model).then(function(response){
                 $scope.disableSubmit = false;
+
+                if(response.status != 0) {
+                    return false;
+                }
+
                 //批量添加的数据添加到ngtables
                 angular.forEach(response.dataMap.updateResult, function (indexData, index, array) {
                     var data = indexData;

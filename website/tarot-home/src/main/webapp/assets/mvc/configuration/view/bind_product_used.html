@@ -22,7 +22,8 @@
                                                         <th width="15%" ng-show="false">id</th>
                                                         <th width="15%" class="center">设备组编号</th>
                                                         <th width="15%" class="center">设备组名称</th>
-                                                        <th width="15%" class="center">操作{{bindDeviceIndex}}</th>
+                                                        <th class="center">所属门店</th>
+                                                        <th width="100" class="center">操作</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -34,13 +35,14 @@
                                                     <td ng-show="false">{{::row.id}}</td>
                                                     <td>{{::row.code}}</td>
                                                     <td>{{::row.name}}</td>
+                                                    <td>{{::row.merchantStore.name}}</td>
                                                     <td  class="center works">
                                                         <table-rights tooltip="{{lang_zh.searchVersion}}" ng-click="searchVersion($index,row)" type="r" tclass="fa-search"></table-rights>
                                                     </td>
                                                 </tr>
                                                 <tr ng-repeat-end ng-if="bindDeviceDetail[$index] && bindDeviceIndex==$index">
                                                     <td colspan="1"></td>
-                                                    <td colspan="3">
+                                                    <td colspan="4">
                                                         <div style="max-height: 200px;overflow-y: auto;">
                                                             <div ng-repeat = "detail in bindDeviceDetail[$index]">
                                                                 <div>设备名:{{detail.deviceUsed.name}},主板编号:{{detail.deviceUsed.boardNo}}</div>

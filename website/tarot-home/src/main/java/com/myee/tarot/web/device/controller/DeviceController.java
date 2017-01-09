@@ -929,6 +929,7 @@ public class DeviceController {
             }
         });
         entry.put("attributes", attributeDTOs);
+        entry.put("merchantStore",productUsed.getStore());
         return entry;
     }
 

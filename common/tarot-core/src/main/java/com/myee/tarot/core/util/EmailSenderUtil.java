@@ -50,4 +50,11 @@ public class EmailSenderUtil {
 			return null;
 	}
 
+	public static void main(String[] args) {
+		EmailSenderUtil instance = new EmailSenderUtil();
+		String[] a = new String[1];
+		a[0] = "jelynn.tang@mrobot.cn";
+		instance.send("cloudmanager@mrobot.cn", a, "test", "test");
+	}
+
 }
