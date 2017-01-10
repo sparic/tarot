@@ -67,6 +67,7 @@ public class MerchantController {
      */
     @RequestMapping(value = "admin/merchant/save", method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_merchant_u')")
     public AjaxResponse saveMerchant(/*@RequestParam(value = "file") String imgBase64,*/@RequestBody Merchant merchant, HttpServletRequest request) throws Exception {
         AjaxResponse resp = null;
         try {
@@ -123,7 +124,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchant/get", method = RequestMethod.GET)
     @ResponseBody
-//    @PreAuthorize("hasAnyAuthority(['MERCHANT_MANAGE','MERCHANT_STORE_R'])")
+    @PreAuthorize("hasAuthority('merchant_merchant_r')")
     public AjaxResponse getMerchant(@RequestParam Long id, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -160,7 +161,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchant/delete", method = RequestMethod.POST)
     @ResponseBody
-//    @PreAuthorize("hasAnyAuthority('MERCHANT_MANAGE','MERCHANT_STORE_D')")
+    @PreAuthorize("hasAuthority('merchant_merchant_d')")
     public AjaxResponse deleteMerchant(@Valid @RequestBody Merchant merchantDelete, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -200,7 +201,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchant/list", method = RequestMethod.GET)
     @ResponseBody
-//    @PreAuthorize("hasAnyAuthority('MERCHANT_MANAGE','MERCHANT_STORE_R')")
+    @PreAuthorize("hasAuthority('merchant_merchant_r')")
     public AjaxResponse listMerchant(HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -218,7 +219,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchant/paging", method = RequestMethod.GET)
     @ResponseBody
-//    @PreAuthorize("hasAnyAuthority('PERMIT_ALL','MERCHANT_MANAGE','MERCHANT_STORE_R')")
+    @PreAuthorize("hasAuthority('merchant_merchant_r')")
     public AjaxPageableResponse pageMerchant(HttpServletRequest request, WhereRequest whereRequest) throws Exception {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {
@@ -238,6 +239,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchant/list4Select", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_merchant_r')")
     public List listMerchant4Select(HttpServletRequest request) throws Exception {
         List resp = new ArrayList();
         try {
@@ -285,6 +287,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchantStore/save", method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_shop_u')")
     public AjaxResponse saveMerchantStore(@RequestBody MerchantStore merchantStore, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -381,6 +384,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchantStore/get", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_shop_r')")
     public AjaxResponse getMerchantStore(@RequestParam Long id, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -396,6 +400,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchantStore/delete", method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_shop_d')")
     public AjaxResponse deleteMerchantStore(@Valid @RequestBody MerchantStore merchantStoreDelete, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -497,6 +502,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchantStore/listByMerchant", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_shop_r')")
     public AjaxResponse listMerchantStoreByMerchant(HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -524,6 +530,7 @@ public class MerchantController {
     //根据切换的商户查询旗下所有门店
     @RequestMapping(value = "admin/merchantStore/pagingByMerchant", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_shop_r')")
     public AjaxPageableResponse pagingMerchantStoreByMerchant(HttpServletRequest request, WhereRequest whereRequest) throws Exception {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {
@@ -562,6 +569,7 @@ public class MerchantController {
     //根据用户绑定门店及当前切换的商户查找
     @RequestMapping(value = "admin/merchantStore/pagingByMerchantUser", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_shop_r')")
     public AjaxPageableResponse pagingByMerchantUser(HttpServletRequest request, WhereRequest whereRequest) throws Exception {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {
@@ -606,6 +614,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchantStore/listByMerchantForSelect", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('merchant_shop_r')")
     public List listMerchantStoreByMerchantForSelect(HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -714,6 +723,7 @@ public class MerchantController {
 
     @RequestMapping(value = "admin/merchantStore/getAllStoreExceptSelf", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('merchant_shop_r','user_user_u')")
     public AjaxResponse getAllStoreExceptSelf() {
         try {
             AjaxResponse resp = new AjaxResponse();
@@ -726,7 +736,6 @@ public class MerchantController {
             LOGGER.error(e.getMessage(),e);
         }
         return AjaxResponse.failed(-1);
-
     }
 
     //把类转换成entry返回给前端，解耦和
