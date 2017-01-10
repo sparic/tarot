@@ -141,7 +141,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         {key:'artemis',name:'Artemis',type:$scope.mgrUpdateConfigData.constant.BASE_INFO_APK.TYPE},
         {key:'gaea',name:'Gaea',type:$scope.mgrUpdateConfigData.constant.BASE_INFO_APK.TYPE},
         {key:'odin',name:'Odin',type:$scope.mgrUpdateConfigData.constant.BASE_INFO_APK.TYPE},
-        {key:'M03',name:'starline',type:$scope.mgrUpdateConfigData.constant.BASE_INFO_MODULE.TYPE},
+        {key:'starline',name:'starline',type:$scope.mgrUpdateConfigData.constant.BASE_INFO_MODULE.TYPE},
         {key:'M04',name:'sensor',type:$scope.mgrUpdateConfigData.constant.BASE_INFO_MODULE.TYPE},
         {key:'M06',name:'base',type:$scope.mgrUpdateConfigData.constant.BASE_INFO_MODULE.TYPE},
         {key:'M07',name:'power',type:$scope.mgrUpdateConfigData.constant.BASE_INFO_MODULE.TYPE},
@@ -763,7 +763,8 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                 if( ( (type == $scope.mgrUpdateConfigData.constant.BASE_INFO_APK.TYPE  //应用命名规则Artemis_**
                         || type == $scope.mgrUpdateConfigData.constant.BASE_INFO_AGENT.TYPE
                         || type == $scope.mgrUpdateConfigData.constant.BASE_INFO_AGENT_PATCH.TYPE)  && positionFind == 0)
-                    || (type == $scope.mgrUpdateConfigData.constant.BASE_INFO_MODULE.TYPE && positionFind == 4)//模块命名规则C001M08**
+                    || (type == $scope.mgrUpdateConfigData.constant.BASE_INFO_MODULE.TYPE
+                        && (positionFind == 4 || positionFind == 0) )//模块命名规则C001M08**,或者一个特殊的starline
                 ) {
                     resultName = indexData.name;
                 }

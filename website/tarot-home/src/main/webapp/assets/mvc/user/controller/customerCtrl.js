@@ -133,17 +133,17 @@ function customerMgrCtrl($scope, cTables, cResource,$filter,$q,cfromly,NgTablePa
         } else {//第一次需要从后台读取列表
             return cResource.get('./merchantStore/getAllStoreExceptSelf').then(function(data){
                 //初始化showCase.selected数组，给全选框用，让它知道应该全选哪些
-                var result = []; //排除当前用户所属门店
-                angular.forEach(data.rows, function (indexData, index, array) {
-                    //indexData等价于array[index]
-                    $scope.showCase.selected[indexData.id] = false;
-                    if( indexData.name != $scope.thisUserDefaultStoreName ) {
-                        result.push(indexData);
-                    }
-                });
-                $scope.initalBindProductList = result;
-
-                return result;
+                //var result = []; //排除当前用户所属门店
+                //angular.forEach(data.rows, function (indexData, index, array) {
+                //    //indexData等价于array[index]
+                //    $scope.showCase.selected[indexData.id] = false;
+                //    if( indexData.name != $scope.thisUserDefaultStoreName ) {
+                //        result.push(indexData);
+                //    }
+                //});
+                //$scope.initalBindProductList = result;
+                $scope.initalBindProductList = data.rows;
+                return $scope.initalBindProductList;
             });
         }
     }

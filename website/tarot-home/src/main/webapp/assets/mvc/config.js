@@ -838,6 +838,7 @@ angular
             bindDeviceDetail:"关联设备详细",
             bindStorePermit:"设置账号可操作门店",
             bindStoreDetail:"可操作门店详细",
+            noEditUserBindStore:"用户所属门店，不能修改",
             attrDetail:"详细属性",
             contentDetail:"内容详细",
             flowDetail:"引流详细",

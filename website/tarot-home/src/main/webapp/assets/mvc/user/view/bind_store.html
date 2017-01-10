@@ -28,7 +28,10 @@
                                         </tr>
                                         <tr ng-repeat="row in $data">
                                             <!--<tr ng-repeat="row in $data | filter : nameFilter" ng-if="showCase.selected[row.id]">-->
-                                            <td class="center"><input type="checkbox" ng-model="showCase.selected[row.id]" ng-click="showCase.toggleOne(showCase.selected)"></td>
+                                            <td class="center">
+                                                <input ng-if="row.name != thisUserDefaultStoreName" type="checkbox" ng-model="showCase.selected[row.id]" ng-click="showCase.toggleOne(showCase.selected)">
+                                                <input ng-if="row.name == thisUserDefaultStoreName" type="checkbox" checked="checked" disabled="disabled">
+                                            </td>
                                             <td ng-show="false">{{::row.id}}</td>
                                             <td>{{::row.name}}</td>
                                             <td>{{::row.code}}</td>
