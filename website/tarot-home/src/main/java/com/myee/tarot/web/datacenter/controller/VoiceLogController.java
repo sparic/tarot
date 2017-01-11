@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,6 +55,7 @@ public class VoiceLogController {
      */
     @RequestMapping(value = "voiceLog/download")
     @ResponseBody
+    @PreAuthorize("hasAuthority('datacenter_voicelog_r')")
     public void download(WhereRequest whereRequest, HttpServletResponse resp) {
         CSVWriter writer = null;
         Map<String, EntityQueryDto> queries = Maps.newHashMap();
@@ -112,6 +114,7 @@ public class VoiceLogController {
 
     @RequestMapping(value = "voiceLog/paging", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('datacenter_voicelog_r')")
     public AjaxPageableResponse pageDevice(WhereRequest whereRequest) {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         Map<String, EntityQueryDto> queries = Maps.newHashMap();

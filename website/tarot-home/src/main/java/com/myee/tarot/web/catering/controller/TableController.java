@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,7 @@ public class TableController {
 
     @RequestMapping(value = {"admin/catering/type/save", "shop/catering/type/save"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('cater_type_u')")
     public AjaxResponse addTableType(@RequestBody TableType type, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -101,6 +103,7 @@ public class TableController {
 
     @RequestMapping(value = {"admin/catering/type/delete", "shop/catering/type/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('cater_type_d')")
     public AjaxResponse delTableType(@RequestBody TableType type, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -138,6 +141,7 @@ public class TableController {
     }
 
     @RequestMapping(value = {"admin/catering/type/paging", "shop/catering/type/paging"}, method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('cater_type_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageTypes(Model model, HttpServletRequest request, PageRequest pageRequest) {
@@ -165,6 +169,7 @@ public class TableController {
 
     @RequestMapping(value = {"admin/catering/zone/save", "shop/catering/zone/save"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('cater_zone_u')")
     public AjaxResponse addTableZone(@RequestBody TableZone zone, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -199,6 +204,7 @@ public class TableController {
 
     @RequestMapping(value = {"admin/catering/zone/delete", "shop/catering/zone/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('cater_zone_d')")
     public AjaxResponse delTableZone(@RequestBody TableZone zone, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -234,6 +240,7 @@ public class TableController {
     }
 
     @RequestMapping(value = {"admin/catering/zone/paging", "shop/catering/zone/paging"}, method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('cater_zone_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageZones(Model model, HttpServletRequest request, PageRequest pageRequest) {
@@ -267,6 +274,7 @@ public class TableController {
 
     @RequestMapping(value = {"admin/catering/table/save", "shop/catering/table/save"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('cater_table_u')")
     public AjaxResponse addTable(@RequestBody Table table,
                                  @RequestParam(value = "dUString", required = false) String dUString,
                                  @RequestParam(value = "autoStart") Long autoStart,
@@ -425,6 +433,7 @@ public class TableController {
 
     @RequestMapping(value = {"admin/catering/table/delete", "shop/catering/table/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('cater_table_d')")
     public AjaxResponse delTable(@RequestBody Table table, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -460,6 +469,7 @@ public class TableController {
     }
 
     @RequestMapping(value = {"admin/catering/table/paging", "shop/catering/table/paging"}, method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('cater_table_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageTables(Model model, HttpServletRequest request, WhereRequest whereRequest) {
@@ -487,6 +497,7 @@ public class TableController {
 
     @RequestMapping(value = {"admin/catering/table/bindDeviceUsed", "shop/catering/table/bindDeviceUsed"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('cater_table_u')")
     public AjaxResponse productUsedBindDeviceUsed(@RequestParam(value = "bindString") String bindString, @RequestParam(value = "tableId") Long tableId, HttpServletRequest request) {
         try {
             AjaxResponse resp;

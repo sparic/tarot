@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -140,6 +141,7 @@ public class PushController {
 
     @RequestMapping(value = "admin/file/delete", method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('explorer_explorer_d')")
     @Transactional
     public AjaxResponse deleteResource(@RequestParam("salt") Long orgID, @RequestParam("path") String path, HttpServletRequest request) {
         String message = "";

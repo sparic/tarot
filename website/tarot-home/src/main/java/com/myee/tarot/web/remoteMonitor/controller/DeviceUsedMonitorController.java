@@ -25,6 +25,7 @@ import com.myee.tarot.remote.util.MetricsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +60,7 @@ public class DeviceUsedMonitorController {
 
     @RequestMapping(value = {"admin/remoteMonitor/deviceUsed/summary"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('remote_dumonitor_r')")
     public AjaxResponse getDeviceUsedSummary(@RequestParam(value = "deviceUsedId") Long deviceUsedId,
                                              HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
@@ -139,6 +141,7 @@ public class DeviceUsedMonitorController {
      */
     @RequestMapping(value = {"admin/remoteMonitor/deviceUsed/metrics"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('remote_dumonitor_r')")
     public AjaxResponse listDeviceUsedMetrics(@RequestParam(value = "deviceUsedId") Long deviceUsedId,
                                               @RequestParam(value = "period") Long period,
                                               @RequestParam(value = "metricsKeyString") String metricsKeyString,
@@ -271,6 +274,7 @@ public class DeviceUsedMonitorController {
      */
     @RequestMapping(value = {"admin/remoteMonitor/deviceUsed/queryMetricPointsByRange"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('remote_dumonitor_r')")
     public AjaxResponse listDeviceUsedMetricsPoints(@RequestParam(value = "deviceUsedId") Long deviceUsedId,
                                               @RequestParam(value = "period") Long period,
                                               @RequestParam(value = "type") Integer type,

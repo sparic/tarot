@@ -11,6 +11,7 @@ import com.myee.tarot.wechat.domain.WxWaitTokenState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,7 @@ public class WaitTokenController {
      */
     @RequestMapping(value = "data/waittoken/paging", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('datacenter_waittoken_r')")
     public AjaxPageableResponse pageWaitToken(Model model, HttpServletRequest request, WhereRequest whereRequest) {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {

@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +63,7 @@ public class UpdateConfigController {
 
     @RequestMapping(value = {"admin/updateConfig/update"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('configuration_update_u')")
     public AjaxResponse addUpdateConfig(@Valid @RequestBody UpdateConfig updateConfig, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -106,6 +108,7 @@ public class UpdateConfigController {
 
     @RequestMapping(value = {"admin/updateConfig/bindProductUsed"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('configuration_update_u')")
     public AjaxResponse deviceUsedBindProductUsed(@RequestParam(value = "bindString") String bindString, @RequestParam(value = "configId") Long configId, HttpServletRequest request) {
         try {
             AjaxResponse resp;
@@ -169,6 +172,7 @@ public class UpdateConfigController {
 
     @RequestMapping(value = {"admin/updateConfig/paging"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('configuration_update_r')")
     public AjaxPageableResponse pageUpdateConfig(Model model, HttpServletRequest request, WhereRequest pageRequest) {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {
@@ -578,6 +582,7 @@ public class UpdateConfigController {
     /*分支管理*************************************************************************/
     @RequestMapping(value = {"admin/configuration/branch/update"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('configuration_branch_u')")
     public AjaxResponse addTableType(@RequestBody BranchConfig branchConfig, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -600,6 +605,7 @@ public class UpdateConfigController {
 
     @RequestMapping(value = {"admin/configuration/branch/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('configuration_branch_d')")
     public AjaxResponse delTableType(@RequestBody BranchConfig branchConfig, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -620,6 +626,7 @@ public class UpdateConfigController {
     }
 
     @RequestMapping(value = {"admin/configuration/branch/paging"}, method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('configuration_branch_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageTypes(Model model, HttpServletRequest request, WhereRequest whereRequest) {

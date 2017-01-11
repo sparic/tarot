@@ -24,6 +24,7 @@ import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +63,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/paging", "shop/device/paging"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_type_r')")
     public AjaxPageableResponse pageDevice(Model model, HttpServletRequest request, WhereRequest whereRequest) {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {
@@ -97,6 +99,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/update", "shop/device/update"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_type_u')")
     public AjaxResponse updateDevice(@Valid @RequestBody Device device, HttpServletRequest request) {
         try {
             AjaxResponse resp;
@@ -139,6 +142,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/delete", "shop/device/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_type_d')")
     public AjaxResponse deleteDevice(@Valid @RequestBody Device device, HttpServletRequest request) {
         try {
             AjaxResponse resp;
@@ -163,6 +167,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/attribute/save", "shop/device/attribute/save"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_type_u')")
     public AjaxResponse saveAttribute(@ModelAttribute Device device, @Valid @RequestBody DeviceAttribute attribute, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         DeviceAttribute entity = attribute;
@@ -182,6 +187,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/attribute/delete", "shop/device/attribute/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_type_d')")
     public AjaxResponse deleteAttribute(@Valid @RequestBody DeviceAttribute attribute, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -204,6 +210,7 @@ public class DeviceController {
      */
     @RequestMapping(value = {"admin/device/used/paging", "shop/device/used/paging"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_list_r')")
     public AjaxPageableResponse pageDeviceUsed(Model model, HttpServletRequest request, WhereRequest whereRequest) {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {
@@ -305,6 +312,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/used/update", "shop/device/used/update"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_list_u')")
     public AjaxResponse saveUsedProduct(@Valid @RequestBody DeviceUsed deviceUsed, @RequestParam(value = "autoStart") Long autoStart, @RequestParam(value = "autoEnd") Long autoEnd, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         try {
@@ -431,6 +439,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/used/bindProductUsed", "shop/device/used/bindProductUsed"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_list_u')")
     public AjaxResponse deviceUsedBindProductUsed(@RequestParam(value = "bindString") String bindString, @RequestParam(value = "deviceUsedId") Long deviceUsedId, HttpServletRequest request) {
         try {
             AjaxResponse resp;
@@ -455,6 +464,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/used/delete", "shop/device/used/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_list_d')")
     public AjaxResponse deleteDeviceUsed(@Valid @RequestBody DeviceUsed deviceUsed, HttpServletRequest request) {
         try {
             AjaxResponse resp;
@@ -585,6 +595,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/used/attribute/save", "shop/device/used/attribute/save"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_list_u')")
     public AjaxResponse saveAttribute(@ModelAttribute DeviceUsed deviceUsed, @Valid @RequestBody DeviceUsedAttribute attribute, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         DeviceUsedAttribute entity = attribute;
@@ -605,6 +616,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/device/used/attribute/delete", "shop/device/used/attribute/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_list_d')")
     public AjaxResponse deleteAttribute(@Valid @RequestBody DeviceUsedAttribute attribute, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -663,6 +675,7 @@ public class DeviceController {
      * productUsed------------------------------------------------------------------------------
      */
     @RequestMapping(value = {"admin/product/used/paging", "shop/product/used/paging"}, method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('device_product_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageUsers(Model model, HttpServletRequest request, WhereRequest whereRequest) {
@@ -765,6 +778,7 @@ public class DeviceController {
     }
 
     @RequestMapping(value = {"admin/product/used/update", "shop/product/used/update"}, method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('device_product_u')")
     @ResponseBody
     public AjaxResponse saveUsedProduct(@Valid @RequestBody ProductUsed productUsed, @RequestParam(value = "autoStart") Long autoStart, @RequestParam(value = "autoEnd") Long autoEnd, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
@@ -844,6 +858,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/product/used/bindDeviceUsed", "shop/product/used/bindDeviceUsed"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_product_u')")
     public AjaxResponse productUsedBindDeviceUsed(@RequestParam(value = "bindString") String bindString, @RequestParam(value = "productUsedId") Long productUsedId, HttpServletRequest request) {
         try {
             AjaxResponse resp;
@@ -870,6 +885,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/product/used/delete", "shop/product/used/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_product_d')")
     public AjaxResponse deleteProductUsed(@Valid @RequestBody ProductUsed productUsed, HttpServletRequest request) {
         try {
             AjaxResponse resp;
@@ -935,6 +951,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/product/attribute/save", "shop/product/attribute/save"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_product_u')")
     public AjaxResponse saveAttribute(@ModelAttribute ProductUsed product, @Valid @RequestBody ProductUsedAttribute attribute, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
         ProductUsedAttribute entity = attribute;
@@ -956,6 +973,7 @@ public class DeviceController {
 
     @RequestMapping(value = {"admin/product/attribute/delete", "shop/product/attribute/delete"}, method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasAuthority('device_product_d')")
     public AjaxResponse deleteAttributeProduct(@Valid @RequestBody ProductUsedAttribute attribute, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
         try {

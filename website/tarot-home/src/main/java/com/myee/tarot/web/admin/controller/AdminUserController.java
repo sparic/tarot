@@ -24,6 +24,7 @@ import com.myee.tarot.profile.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +63,7 @@ public class AdminUserController {
     private MerchantStoreService merchantStoreService;
 
     @RequestMapping(value = "admin/users/paging", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('user_user_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageUsers(Model model, HttpServletRequest request, WhereRequest whereRequest) {
@@ -81,6 +83,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/users/save", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_user_u')")
     @ResponseBody
     public AjaxResponse addUser(@RequestBody AdminUser user, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
@@ -122,6 +125,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/users/delete", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_user_d')")
     @ResponseBody
     public AjaxResponse deleteUser(@Valid @RequestBody AdminUser adminUser, HttpServletRequest request) {
         AjaxResponse resp = new AjaxResponse();
@@ -220,6 +224,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/customers/save", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_customer_u')")
     @ResponseBody
     public AjaxResponse addCustomer(@RequestBody Customer user, HttpServletRequest request) throws Exception {
         AjaxResponse resp;
@@ -255,6 +260,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/customers/paging", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('user_customer_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageCustomer(Model model, HttpServletRequest request, WhereRequest whereRequest) {
@@ -277,6 +283,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/customers/delete", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_customer_d')")
     @ResponseBody
     public AjaxResponse deleteCustomer(@Valid @RequestBody Customer user, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
@@ -328,6 +335,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/roles/paging", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('user_role_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageRoles(Model model, HttpServletRequest request) {
@@ -342,6 +350,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/roles/save", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_role_u')")
     @ResponseBody
     public AjaxResponse mergeRole(@Valid @RequestBody Role role, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
@@ -359,6 +368,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/roles/delete", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_role_d')")
     @ResponseBody
     public AjaxResponse deleteRole(@Valid @RequestBody Role role, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
@@ -387,6 +397,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/roles/bindPermissions", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_role_u')")
     @ResponseBody
     public AjaxResponse bindRolePermissions(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "roleId")Long roleId, HttpServletRequest request) {
         AjaxResponse resp;
@@ -409,9 +420,10 @@ public class AdminUserController {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////
+    //adminRole//////////////////////////////////////////////////////////////////
 
     @RequestMapping(value = "admin/adminRoles/paging", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('user_adminrole_r')")
     public
     @ResponseBody
     AjaxPageableResponse pageAdminRoles(Model model, HttpServletRequest request) {
@@ -427,6 +439,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/adminRoles/save", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_adminrole_u')")
     @ResponseBody
     public AjaxResponse mergeAdminRole(@Valid @RequestBody AdminRole role, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
@@ -444,6 +457,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/adminRoles/delete", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_adminrole_d')")
     @ResponseBody
     public AjaxResponse deleteAdminRole(@Valid @RequestBody AdminRole role, HttpServletRequest request) throws Exception {
         AjaxResponse resp = new AjaxResponse();
@@ -471,6 +485,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/adminRoles/bindPermissions", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_adminrole_u')")
     @ResponseBody
     public AjaxResponse bindAdminRolePermissions(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "roleId")Long roleId, HttpServletRequest request) {
         AjaxResponse resp;
@@ -567,92 +582,8 @@ public class AdminUserController {
         return entry;
     }
 
-    @RequestMapping(value = "admin/customers/bindMerchantStore", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxResponse bindCustomerAndMerchantStore(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "userId")Long userId, HttpServletRequest request) {
-        AjaxResponse resp;
-        try {
-            Customer customer = customerService.findById(userId);
-            if (customer == null) {
-                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"参数不正确");
-            }
-            List<Long> bindList = JSON.parseArray(bingString, Long.class);
-            Set<MerchantStore> merchantStoreSet = null;
-            if(bindList != null && bindList.size() > 0) {
-                List<MerchantStore> merchantStores = merchantStoreService.listByIds(bindList);
-                if (merchantStores != null) {
-                    merchantStoreSet = Sets.newHashSet(merchantStores);
-                }
-            }
-
-            customer.setAllMerchantStores(merchantStoreSet);
-            customer = customerService.update(customer);
-            resp = AjaxResponse.success();
-            resp.addEntry(Constants.RESPONSE_UPDATE_RESULT, objectToEntry(customer));
-            return resp;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            return AjaxResponse.failed(-1, "绑定失败");
-        }
-    }
-
-    @RequestMapping(value = "admin/users/bindRole", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxResponse bindUserRole(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "userId")Long userId, HttpServletRequest request) {
-        AjaxResponse resp;
-        try {
-            AdminUser adminUser = userService.findById(userId);
-            if (adminUser == null) {
-                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"参数不正确");
-            }
-            List<Long> bindList = JSON.parseArray(bingString, Long.class);
-            Set<AdminRole> adminRoleSet = null;
-            if(bindList != null && bindList.size() > 0) {
-                List<AdminRole> adminRoleList = adminRoleService.listByIds(bindList);
-                if (adminRoleList != null) {
-                    adminRoleSet = Sets.newHashSet(adminRoleList);
-                }
-            }
-            adminUser.setAllRoles(adminRoleSet);
-            adminUser = userService.update(adminUser);
-            resp = AjaxResponse.success();
-            resp.addEntry(Constants.RESPONSE_UPDATE_RESULT, objectToEntry(adminUser));
-            return resp;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            return AjaxResponse.failed(-1, "绑定失败");
-        }
-    }
-
-    @RequestMapping(value = "admin/customers/bindRole", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxResponse bindCustomerRole(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "userId")Long userId, HttpServletRequest request) {
-        AjaxResponse resp;
-        try {
-            Customer customer = customerService.findById(userId);
-            if (customer == null) {
-                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"参数不正确");
-            }
-            List<Long> bindList = JSON.parseArray(bingString, Long.class);
-            Set<Role> adminRoleSet = null;
-            if(bindList != null && bindList.size() > 0) {
-                List<Role> customerRoleList = roleService.listByIds(bindList);
-                if (customerRoleList != null) {
-                    adminRoleSet = Sets.newHashSet(customerRoleList);
-                }
-            }
-            customer.setAllRoles(adminRoleSet);
-            customer = customerService.update(customer);
-            resp = AjaxResponse.success();
-            resp.addEntry(Constants.RESPONSE_UPDATE_RESULT, objectToEntry(customer));
-            return resp;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            return AjaxResponse.failed(-1, "绑定失败");
-        }
-    }
-
     @RequestMapping(value = "admin/users/bindMerchantStore", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_user_u')")
     @ResponseBody
     public AjaxResponse bindAdminAndMerchantStore(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "userId")Long userId, HttpServletRequest request) {
         AjaxResponse resp;
@@ -682,6 +613,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "admin/users/bindPermissions", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_user_u')")
     @ResponseBody
     public AjaxResponse bindAdminUserPermissions(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "userId")Long userId, HttpServletRequest request) {
         AjaxResponse resp;
@@ -704,7 +636,100 @@ public class AdminUserController {
         }
     }
 
+    @RequestMapping(value = "admin/users/bindRole", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_user_u')")
+    @ResponseBody
+    public AjaxResponse bindUserRole(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "userId")Long userId, HttpServletRequest request) {
+        AjaxResponse resp;
+        try {
+            AdminUser adminUser = userService.findById(userId);
+            if (adminUser == null) {
+                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"参数不正确");
+            }
+            List<Long> bindList = JSON.parseArray(bingString, Long.class);
+            Set<AdminRole> adminRoleSet = null;
+            if(bindList != null && bindList.size() > 0) {
+                List<AdminRole> adminRoleList = adminRoleService.listByIds(bindList);
+                if (adminRoleList != null) {
+                    adminRoleSet = Sets.newHashSet(adminRoleList);
+                }
+            }
+            adminUser.setAllRoles(adminRoleSet);
+            adminUser = userService.update(adminUser);
+            resp = AjaxResponse.success();
+            resp.addEntry(Constants.RESPONSE_UPDATE_RESULT, objectToEntry(adminUser));
+            return resp;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return AjaxResponse.failed(-1, "绑定失败");
+        }
+    }
+
+    @RequestMapping(value = "admin/customers/bindMerchantStore", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_customer_u')")
+    @ResponseBody
+    public AjaxResponse bindCustomerAndMerchantStore(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "userId")Long userId, HttpServletRequest request) {
+        AjaxResponse resp;
+        try {
+            Customer customer = customerService.findById(userId);
+            if (customer == null) {
+                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"参数不正确");
+            }
+            List<Long> bindList = JSON.parseArray(bingString, Long.class);
+            Set<MerchantStore> merchantStoreSet = null;
+            if(bindList != null && bindList.size() > 0) {
+                List<MerchantStore> merchantStores = merchantStoreService.listByIds(bindList);
+                if (merchantStores != null) {
+                    merchantStoreSet = Sets.newHashSet(merchantStores);
+                }
+            }
+
+            customer.setAllMerchantStores(merchantStoreSet);
+            customer = customerService.update(customer);
+            resp = AjaxResponse.success();
+            resp.addEntry(Constants.RESPONSE_UPDATE_RESULT, objectToEntry(customer));
+            return resp;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return AjaxResponse.failed(-1, "绑定失败");
+        }
+    }
+
+
+
+    @RequestMapping(value = "admin/customers/bindRole", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_customer_u')")
+    @ResponseBody
+    public AjaxResponse bindCustomerRole(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "userId")Long userId, HttpServletRequest request) {
+        AjaxResponse resp;
+        try {
+            Customer customer = customerService.findById(userId);
+            if (customer == null) {
+                return AjaxResponse.failed(AjaxResponse.RESPONSE_STATUS_FAIURE,"参数不正确");
+            }
+            List<Long> bindList = JSON.parseArray(bingString, Long.class);
+            Set<Role> adminRoleSet = null;
+            if(bindList != null && bindList.size() > 0) {
+                List<Role> customerRoleList = roleService.listByIds(bindList);
+                if (customerRoleList != null) {
+                    adminRoleSet = Sets.newHashSet(customerRoleList);
+                }
+            }
+            customer.setAllRoles(adminRoleSet);
+            customer = customerService.update(customer);
+            resp = AjaxResponse.success();
+            resp.addEntry(Constants.RESPONSE_UPDATE_RESULT, objectToEntry(customer));
+            return resp;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return AjaxResponse.failed(-1, "绑定失败");
+        }
+    }
+
+
+
     @RequestMapping(value = "admin/customer/bindPermissions", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('user_customer_u')")
     @ResponseBody
     public AjaxResponse bindCustomerPermissions(@RequestParam(value = "bindString")String bingString, @RequestParam(value = "customerId")Long customerId, HttpServletRequest request) {
         AjaxResponse resp;

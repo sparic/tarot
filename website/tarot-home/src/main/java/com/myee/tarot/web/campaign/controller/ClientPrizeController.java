@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -59,6 +60,7 @@ public class ClientPrizeController extends BaseController {
      * @return
      */
     @RequestMapping(value = {"admin/saveClientPrize", "shop/saveClientPrize"}, method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('campaign_clientprize_u')")
     public AjaxResponse saveClientPrize(@RequestBody ClientPrize clientPrize, HttpServletRequest request) {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -119,6 +121,7 @@ public class ClientPrizeController extends BaseController {
      * @return
      */
     @RequestMapping(value = {"admin/clientPrize/pagingList", "shop/clientPrize/pagingList"}, method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('campaign_clientprize_r')")
     public AjaxPageableResponse pageListOfPrize(HttpServletRequest request, WhereRequest whereRequest) {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {
@@ -151,6 +154,7 @@ public class ClientPrizeController extends BaseController {
      * @return
      */
     @RequestMapping(value = {"admin/deleteClientPrize", "shop/deleteClientPrize"}, method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('campaign_clientprize_d')")
     public AjaxResponse deleteClientPrize(@RequestBody ClientPrize clientPrize, HttpServletRequest request) {
         AjaxResponse resp = new AjaxResponse();
         try {
@@ -184,6 +188,7 @@ public class ClientPrizeController extends BaseController {
      * @return
      */
     @RequestMapping(value = {"admin/clientPrizeInfo/pagingListOfChecked", "shop/clientPrizeInfo/pagingListOfChecked"}, method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('campaign_clientprizecheck_r')")
     public AjaxPageableResponse pageListOfPrizeInfoChecked(HttpServletRequest request, PageRequest pageRequest) {
         AjaxPageableResponse resp = new AjaxPageableResponse();
         try {
