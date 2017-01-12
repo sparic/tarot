@@ -212,6 +212,7 @@ function cTablesService(NgTableParams, cAlerts,$timeout,cResource) {
             } else {
                 scope.tableOpts.data.splice(scope.rowIndex, 1, data);
             }
+            //scope.tableOpts.reload(); //刷新数据表，但是会再一次访问后台
             scope.goDataTable();
         }
 

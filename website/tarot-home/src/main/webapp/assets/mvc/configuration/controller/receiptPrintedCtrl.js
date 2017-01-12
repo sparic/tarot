@@ -145,7 +145,7 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
             dataset: $filter('filter')($scope.initalBindProductList, $scope.showCase.nameFilter || "")//根据搜索字段过滤数组中数据
         });
         $scope.loadByInit = true;
-        $scope.tableOpts.page(1);
+        $scope.tableBindOpts.page(1);
         $scope.tableBindOpts.reload();
         deferred.resolve($scope.tableBindOpts);
         return deferred.promise;

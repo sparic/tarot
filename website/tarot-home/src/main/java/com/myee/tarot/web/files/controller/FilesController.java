@@ -300,7 +300,8 @@ public class FilesController {
             } else if (!file.isEmpty() && type.equals(RESOURCE_TYPE_FILE)) {
 //                System.out.println(file.getFileItem().getName());
                 dest.mkdirs();
-                String fileName = file.getFileItem().getName();
+//                String fileName = file.getFileItem().getName();
+                String fileName = file.getOriginalFilename();
                 dest = FileUtils.getFile(dest.getPath(), File.separator + fileName);
                 file.transferTo(dest);
                 TreeFileItem jt = new TreeFileItem();

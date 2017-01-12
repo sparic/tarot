@@ -74,7 +74,7 @@ function tableMgrCtrl($scope, cResource, cTables, cfromly, Constants, NgTablePar
             dataset: $filter('filter')($scope.initalBindProductList, $scope.showCase.nameFilter || "")
         });
         $scope.loadByInit = true;
-        $scope.tableOpts.page(1);
+        $scope.tableBindOpts.page(1);
         $scope.tableBindOpts.reload();
         deferred.resolve($scope.tableBindOpts);
         return deferred.promise;
