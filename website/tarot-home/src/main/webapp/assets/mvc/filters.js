@@ -9,6 +9,7 @@ angular
     .filter('isHasProp',isHasProp)
     .filter('toasterManage',toasterManage)
     .filter('routers',routers)
+    .filter('findEach',findEach)
 
 //判断对象是否是空或空字符
 function isNullOrEmptyString(){
@@ -199,5 +200,41 @@ function routers($rootScope,$state){
     return function(contr){
         var arr = $state.current.name.split("."),contrs = $rootScope.routerAll.C[arr[0]][arr[1]];
         return contrs.indexOf(contr) >=0?true:false;
+    }
+}
+
+/**
+ *模糊搜索数组
+ */
+function findEach(){
+    return function(opt,val,keyword){
+        if(opt && val){
+            var vResult = [];
+            angular.forEach(opt, function(data,index){
+                if(typeof data == 'string'){
+                    //string
+                    if(data.toLowerCase().indexOf(val.toLowerCase()) >= 0){
+                        vResult[vResult.length] = data;
+                    }
+                }else{
+                    //obj
+                    if(keyword){
+                        if(data[keyword].toLowerCase().indexOf(val.toLowerCase()) >= 0){
+                            vResult[vResult.length] = data;
+                        }
+                    }else{
+                        var tmpOne;
+                        for(var tmp in data){
+                            tmpOne = data[tmp].toLowerCase();
+                            break;
+                        }
+                        if(tmpOne.toLowerCase().indexOf(val.toLowerCase()) >= 0){
+                            vResult[vResult.length] = data;
+                        }
+                    }
+                }
+            });
+            return vResult;
+        }
     }
 }

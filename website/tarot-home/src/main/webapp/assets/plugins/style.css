@@ -10142,7 +10142,7 @@ table th,table td {white-space:nowrap;}
 .tableXyAuto {overflow-x: auto;}
 .tableXyAuto td,.tableXyAuto tr {white-space:nowrap;}
 .table.ng-table td, .table.table-bordered>tbody>tr>td{ vertical-align: middle;}
-.works a {border-left: #aaa 1px solid; padding: 0 8px;}
+.works a { padding: 0 8px 0 11px; border-left: #eee 1px solid;}
 .works a:first-child {border-left: none;}
 
 /*.wrapper-content {padding: 15px 0px 20px;}*/
@@ -10218,7 +10218,7 @@ table th,table td {white-space:nowrap;}
 }
 
 .formly .formly-field .form-group {
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .formly .formly-field label {
@@ -10243,6 +10243,9 @@ table th,table td {white-space:nowrap;}
 .formly .formly-field .checkbox {
     margin: 0 0 0 20px;
 }
+.formly .col-sm-2,.formly .col-sm-8 {display: inline-block;float: none; vertical-align: top}
+.formly .dropdown-menu {display: block; top: 32px; left: 16px; border-radius: 0; width: 258px; overflow-x: auto;}
+/*.formly .formly-field-typeahead option:first-child{display: none}*/
 
 .formly-field-datepicker .form-group,.formly-field-upload .form-group,.formly-field-c_images,.formly-field-c_img_crop {overflow: inherit !important;  width: 100%;   display: inline-block; margin: 0;}
 .formly-field-datepicker .form-group label,.formly-field-upload .form-group label {width: 16.66666667%; float: left}
@@ -10295,8 +10298,8 @@ ul.form-inline span {vertical-align: middle;}
     margin: 0;
 }
 
-.c_select select {
-    max-width: 260px;
+.c_select select,.c_select input {
+    max-width: 260px !important;
 }
 
 .formly-min-checkbox input {
@@ -10538,3 +10541,8 @@ ul.form-inline span {vertical-align: middle;}
 .previewReciptModule {
     border-style: solid;
 }
+/*denied*/
+#denied {text-align: center;}
+#denied img {}
+#denied span {display: block;text-align: center;width: 100%;margin-top: 100px}
+#denied a {background: #eee; color: #999; padding: 12px 40px; border-radius: 5px;font-size: 17px}

@@ -792,6 +792,16 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider,$httpPro
             });
         }
     });
+    //错误页-操作权限
+    $stateProvider.state('denied', {
+        url: "/denied",
+        templateUrl: "assets/mvc/desktop/view/denied.html",
+        //controller: 'deniedCtrl',
+        data: {
+            pageTitle: '错误了',
+            subTitle: '没有此页面操作权限'
+        }
+    });
     //结束
 }
 angular

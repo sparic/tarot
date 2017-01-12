@@ -321,6 +321,43 @@ function cfromlyService(formlyConfig, $window,$q, toaster, $filter,$timeout,form
         ].join(' ')
     });
 
+    //typeahead功能暂不可用
+    formlyConfig.setType({
+        name: 'typeahead',
+        /*template: [
+            '<div>',
+            '<input class="form-control" type="text" ng-model="model[options.key]">',
+            '<input class="form-control" style="position: absolute;top: 0;" placeholder="输入关键词" type="text" ng-value="searchVal"  ng-keyup="keyup($event)" autocomplete="off" ng-focus="searchShow = true" >',
+            '<select size="7" ng-model="model[options.key]" class="form-control dropdown-menu" ng-show="searchShow" style="height: 120px">',
+            '<option value="" selected="selected" style="display: none"></option>',
+            '<option ng-repeat="o in obj" value="{{o.id || o.value}}"  ng-click="setModel(o.name)">{{o.name}}</option>',
+            '</select>',
+            //'<ul ng-show="searchShow" class="dropdown-menu ng-isolate-scope"><li class="uib-typeahead-match" ng-repeat="o in obj" ng-click="setModel($index)"><a>{{o.name}}</a></li></ul>',
+            '</div>'
+        ].join(' '),*/
+        template: '<input type="text" autocomplete="off" ng-model="model[options.key]" uib-typeahead="item.name for item in to.options | filter:$viewValue | limitTo:10" class="form-control">',
+        wrapper: ['lineLabel', 'bootstrapHasError'],
+        link: function (scope, el, attrs) {
+            /*scope.obj = angular.copy(scope.to.options);//copy 数据备用
+            scope.searchShow = false;//设置下拉框
+            //input 键盘事件[匹配搜索]
+            scope.keyup =  function($event){
+                var val = $event.target.value;
+                if(val){
+                    scope.obj = $filter('findEach')(scope.obj,val,scope.options.templateOptions.searchKeyword || '');
+                }else{
+                    scope.obj = scope.to.options;
+                }
+            }
+
+            scope.setModel = function(name){
+                console.log(name)
+                scope.searchVal = name;
+                scope.searchShow = false;
+            }*/
+        }
+    });
+
     //ngImgCrop
     formlyConfig.setType({
         name: 'c_img_crop',
@@ -625,7 +662,7 @@ function uploads($qupload,cResource) {
 * cResource
 *
 * */
-function cResource($resource,$filter,$q){
+function cResource($resource,$filter,$q,$state){
     //错误状态
     var toastError = 0, toastOperationSucc = 1, toastDeleteSucc = 2, toastSearchSucc = 3, toastUploadSucc = 4;
     //处理数据
@@ -650,7 +687,8 @@ function cResource($resource,$filter,$q){
         if(data){
             var respData = angular.fromJson(data);
             if(respData.status && respData.status == baseUrl.accessDeni){
-                window.location.href=respData.rows[0].accessDeni;
+                $state.go('denied');
+                //window.location.href=respData.rows[0].accessDeni;
                 return false;
             }
             return angular.fromJson(data);

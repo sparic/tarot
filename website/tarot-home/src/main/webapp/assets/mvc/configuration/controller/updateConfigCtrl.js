@@ -73,8 +73,9 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                 templateOptions: {
                     required: true,
                     label: '分支',
-                    placeholder: '分支',
+                    placeholder: '输入分支关键词',
                     options: getBranchList(),
+                    //searchKeyword:'name',
                     isSearch:true
                 }
             },
