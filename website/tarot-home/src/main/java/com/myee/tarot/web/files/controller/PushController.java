@@ -517,4 +517,21 @@ public class PushController {
         }
         return null;
     }
+
+	@RequestMapping("admin/test/uploadagenterrorfile")
+	@ResponseBody
+	public AjaxResponse uploadAgentErrorFile(HttpServletRequest request) {
+		try {
+			TrunkingInterface endpointInterface = serverBootstrap.getClient(TrunkingInterface.class, "TEST123456");
+			JSONObject object = new JSONObject();
+			object.put("fileType", "error");
+			boolean result = endpointInterface.uploadFile(JSON.toJSONString(object));
+			if(result){
+				return AjaxResponse.success("命令发送成功，正在上传……");
+			}
+			return AjaxResponse.failed(-1, "发送命令出错");
+		} catch (Exception e) {
+			return AjaxResponse.failed(-2, "连接客户端错误");
+		}
+	}
 }

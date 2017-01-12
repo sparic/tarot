@@ -138,6 +138,20 @@ function explorerCtrl($scope,$resource, cResource, $filter, cfromly, Constants, 
         $scope.formDataPusher.model.content = arraySelected;
     };
 
+    //点击上传agent错误日志时调用
+    $scope.goUploadAgentErrorFile = function () {
+        cResource.get('../admin/test/uploadagenterrorfile',{}, {}).then(function(resp){
+            console.log(resp.value)
+            if (resp != null && resp.status == 0) {
+                $filter('toasterManage')(5, resp.statusMessage,true);
+                //toaster.success({body: resp.statusMessage});
+            } else {
+                $filter('toasterManage')(5, resp.statusMessage,false);
+                //toaster.error({body: resp.statusMessage});
+            }
+        });
+    };
+
     //递归出所有选中的文件
     function recursionTree(data, arraySelected) {
         angular.forEach(data, function (d) {
