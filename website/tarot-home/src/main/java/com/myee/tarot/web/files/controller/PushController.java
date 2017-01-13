@@ -518,7 +518,7 @@ public class PushController {
         return null;
     }
 
-	@RequestMapping("admin/test/uploadagenterrorfile")
+	/*@RequestMapping("admin/test/uploadagenterrorfile")
 	@ResponseBody
 	public AjaxResponse uploadAgentErrorFile(HttpServletRequest request) {
 		try {
@@ -533,5 +533,5 @@ public class PushController {
 		} catch (Exception e) {
 			return AjaxResponse.failed(-2, "连接客户端错误");
 		}
-	}
+	}*/
 }
