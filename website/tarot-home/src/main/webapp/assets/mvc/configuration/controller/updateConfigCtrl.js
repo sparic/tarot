@@ -461,12 +461,12 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         }
         //如果上传了文件，就执行上传文件的业务逻辑
         else if( _file && $filter('isHasProp')(_file)/*_file != {}*/ ) {
-            if ($filter('isNullOrEmptyString')(thisRowTemp)
+            if (!thisRowTemp
                     //|| $filter('isNullOrEmptyString')(thisRowTemp.name)
-                    || $filter('isNullOrEmptyString')(thisRowTemp.version)
+                    //除自研平板外版本号不能为空，因为自研平板的版本号用的是不带扩展名的文件名
+                    || ($filter('isNullOrEmptyString')(thisRowTemp.version) && $scope.formDataUpdateConfig.model.type != $scope.mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE)
                         //|| $filter('isNullOrEmptyString')(thisRow.type)
                     || $filter('isNullOrEmptyString')(thisRowTemp.force_update)
-
             ) {
                 $timeout(function () {
                     $filter('toasterManage')(5,"请填写完整信息!",false);
@@ -554,6 +554,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         else if( (!_file || !$filter('isHasProp')(_file)/*_file == {}*/)
             && !$filter('isNullOrEmptyString')(thisRowTemp.md5)
             && !$filter('isNullOrEmptyString')(thisRowTemp.web)) {
+            console.log(323)
             //给thisRowTemp的name赋初值
             thisRowTemp.name = thisRowTemp.name? thisRowTemp.name : $scope.formDataUpdateConfig.model.attributes[index].name;
 
@@ -773,7 +774,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
     };
 
 
-    //校验要上传的升级文件文件名与模块/应用名称是否一致
+    //选择文件的input选择文件时，执行校验要上传的升级文件文件名与对照表是否一致
     $scope.checkUpdate = function (file, thisRow, index) {
         var _file = file.files[0];
         $scope.fileList[index] = _file;

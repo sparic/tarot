@@ -303,6 +303,9 @@ public class FilesController {
 //                String fileName = file.getFileItem().getName();
                 String fileName = file.getOriginalFilename();
                 dest = FileUtils.getFile(dest.getPath(), File.separator + fileName);
+                if(!dest.exists()) {
+                    dest.createNewFile();
+                }
                 file.transferTo(dest);
                 TreeFileItem jt = new TreeFileItem();
                 jt.setId(dest.getPath());
