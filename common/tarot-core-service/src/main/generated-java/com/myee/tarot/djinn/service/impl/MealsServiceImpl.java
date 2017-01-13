@@ -1,5 +1,6 @@
 package com.myee.tarot.djinn.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.myee.djinn.dto.CommonResult;
@@ -13,6 +14,8 @@ import com.myee.tarot.core.service.TransactionalAspectAware;
 import com.myee.tarot.datacenter.service.WaitTokenService;
 import com.myee.tarot.merchant.service.MerchantStoreService;
 import com.myee.tarot.wechat.domain.WxWaitToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,7 @@ import java.util.Map;
 @Service
 public class MealsServiceImpl implements MealsService, TransactionalAspectAware {
 
+	private static final Logger LOG = LoggerFactory.getLogger(MealsServiceImpl.class);
     @Autowired
     private WaitTokenService waitTokenService;
     @Autowired
@@ -36,6 +40,7 @@ public class MealsServiceImpl implements MealsService, TransactionalAspectAware 
 
     @Override
     public CommonResult takeNumber(WaitToken waitToken) throws RemoteException {
+		LOG.info("takeNumber  waitToken= {}  ", JSON.toJSONString(waitToken));
         //保存至数据库 将领号数据加入
         WxWaitToken wxWaitToken = new WxWaitToken();
         wxWaitToken.setTableTypeId(waitToken.getTableTypeId()); //桌类型

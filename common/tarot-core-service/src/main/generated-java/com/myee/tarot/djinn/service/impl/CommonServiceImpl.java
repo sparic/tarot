@@ -11,18 +11,23 @@ import com.myee.tarot.admin.domain.AdminUser;
 import com.myee.tarot.admin.service.AdminUserService;
 import com.myee.tarot.catalog.domain.DeviceUsed;
 import com.myee.tarot.catalog.service.DeviceUsedService;
+import com.myee.tarot.configuration.domain.UpdateConfig;
+import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
+import com.myee.tarot.configuration.service.UpdateConfigProductUsedXREFService;
 import com.myee.tarot.core.Constants;
 import com.myee.tarot.core.service.TransactionalAspectAware;
+import com.myee.tarot.core.util.DateTimeUtils;
+import com.myee.tarot.core.util.EmailSenderUtil;
 import com.myee.tarot.core.util.FileUtils;
+import com.myee.tarot.core.util.StringUtil;
+import com.myee.tarot.core.util.ajax.AjaxResponse;
 import com.myee.tarot.merchant.domain.Merchant;
 import com.myee.tarot.merchant.domain.MerchantStore;
 import com.myee.tarot.merchant.service.MerchantStoreService;
 import com.myee.tarot.profile.domain.Address;
 import com.myee.tarot.resource.domain.Notification;
-import com.myee.tarot.configuration.domain.UpdateConfig;
-import com.myee.tarot.configuration.domain.UpdateConfigProductUsedXREF;
 import com.myee.tarot.resource.service.NotificationService;
-import com.myee.tarot.configuration.service.UpdateConfigProductUsedXREFService;
+import org.apache.http.HttpStatus;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -57,6 +62,9 @@ public class CommonServiceImpl implements CommonService, TransactionalAspectAwar
 	@Value("${cleverm.push.dirs}")
 	private String DOWNLOAD_HOME;
 
+	public static final String FROM = "cloudmanager@mrobot.cn";  //密码 Cloud161230
+	public static final String[] TO = {"jelynn.tang@mrobot.cn"};
+
 	private List<String> typeList = new ArrayList<>(Arrays.asList("ipc", "app", "tinker", "tinker_test"));
 
 	@Override
@@ -64,6 +72,12 @@ public class CommonServiceImpl implements CommonService, TransactionalAspectAwar
 		return true;
 	}
 
+	/**
+	 * 原升级方案接口
+	 * @param jsonArgs
+	 * @return
+	 * @throws RemoteException
+	 */
 	@Override
 	public VersionInfo latestVersion(String jsonArgs) throws RemoteException {
 		LOG.info("jsonArgs= {}  DOWNLOAD_HOME={}", jsonArgs, DOWNLOAD_HOME);
@@ -95,6 +109,12 @@ public class CommonServiceImpl implements CommonService, TransactionalAspectAwar
 		return info;
 	}
 
+	/**
+	 * 新升级方案接口
+	 * @param jsonArgs
+	 * @return
+	 * @throws RemoteException
+	 */
 	@Override
 	public String latestVersionStr(String jsonArgs) throws RemoteException {
 		LOG.info("jsonArgs= {}  DOWNLOAD_HOME={}", jsonArgs, DOWNLOAD_HOME);
@@ -143,6 +163,7 @@ public class CommonServiceImpl implements CommonService, TransactionalAspectAwar
 //		}
 		ShopDetail shopDetail = toDto(merchantStore);
 		shopDetail.setOpeningTime(toHourString(merchantStore.getTimeOpen()) + "~" + toHourString(merchantStore.getTimeClose()));
+		LOG.info(" ownerShop shopDetail = {}", JSON.toJSONString(shopDetail));
 		return shopDetail;
 	}
 
@@ -169,6 +190,7 @@ public class CommonServiceImpl implements CommonService, TransactionalAspectAwar
 
 	@Override
 	public boolean receiveNotice(NotificationDTO notificationDTO) throws RemoteException {
+		LOG.info(" receiveNotice notificationDTO = {}", JSON.toJSONString(notificationDTO));
 		Notification notification = convertToNotification(notificationDTO);
 		notificationService.save(notification);
 		return true;
@@ -176,6 +198,35 @@ public class CommonServiceImpl implements CommonService, TransactionalAspectAwar
 
 	@Override
 	public boolean sendEmail(String jsonArgs) throws RemoteException {
+//		LOG.info(" sendEmail jsonArgs = {}", jsonArgs);
+//		JSONObject object = JSON.parseObject(jsonArgs);
+//		String boardNO = object.getString(com.myee.djinn.constants.Constants.BOARD_NO);
+//		String errorInfo = object.getString(com.myee.djinn.constants.Constants.ERROR_INFO);
+//		String time = object.getString(com.myee.djinn.constants.Constants.TIME);
+//		String subject = object.getString(com.myee.djinn.constants.Constants.SUBJECT);
+//		long timeStamp = time == null ? 0 : Long.parseLong(time);
+//		Date sendDate = new Date();
+//		if (timeStamp != 0) {
+//			sendDate = new Date(timeStamp);
+//		}
+//		//查询店铺
+//		DeviceUsed deviceUsed = deviceUsedService.getByBoardNo(boardNO);
+//		MerchantStore merchantStore = deviceUsed.getStore();
+//		//拼接邮件内容
+//
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("主板编号：").append(boardNO).append("\n");
+//		sb.append("设备名称：").append(deviceUsed.getName()).append("\n");
+//		sb.append("店铺名称：").append(merchantStore.getName()).append("\n");
+//		sb.append("店铺电话：").append(merchantStore.getPhone()).append("\n");
+//		sb.append("报错时间：").append(DateTimeUtils.getDefaultDateString(sendDate)).append("\n");
+//		sb.append("错误信息：").append("\n");
+//		sb.append(errorInfo).append("\n");
+//		EmailSenderUtil emailSenderUtil = new EmailSenderUtil();
+//		subject = StringUtil.isNullOrEmpty(subject) ? "发生异常" : subject;
+//		AjaxResponse response = emailSenderUtil.send(FROM, TO, subject, sb.toString());
+//		LOG.info(" sendEmail result = {}", response.getStatus());
+//		return response.getStatus() == 0;
 		return false;
 	}
 

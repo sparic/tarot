@@ -41,7 +41,7 @@ import java.util.Map;
 @Service
 public class DataStoreServiceImpl implements DataStoreService, TransactionalAspectAware {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataStoreServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DataStoreServiceImpl.class);
     @Autowired
     private SelfCheckLogService selfCheckLogService;
     @Autowired
@@ -74,7 +74,7 @@ public class DataStoreServiceImpl implements DataStoreService, TransactionalAspe
 
     @Override
     public String readTextFile(long orgId, String path) throws RemoteException {
-        LOG.info("orgId= {}  path= {} DOWNLOAD_HOME={}", orgId, path, DOWNLOAD_HOME);
+        LOG.info("readTextFile  orgId= {}  path= {} DOWNLOAD_HOME={}", orgId, path, DOWNLOAD_HOME);
         path = path.replaceAll("#","");
         String fileData = "";
         StringBuffer sb = new StringBuffer();
@@ -87,6 +87,7 @@ public class DataStoreServiceImpl implements DataStoreService, TransactionalAspe
         }
         try {
             fileData = FileUtils.readFileToString(file, "utf-8");
+			LOG.info("readTextFile  fileData= {} ", fileData);
         } catch (IOException e) {
             LOG.error(" read file error ", e);
         }
@@ -96,13 +97,12 @@ public class DataStoreServiceImpl implements DataStoreService, TransactionalAspe
 
     @Override
     public boolean uploadData(DataUploadInfoDTO dataUploadInfoDTO) throws RemoteException {
+		LOG.info("uploadData  dataUploadInfoDTO= {} ", JSON.toJSONString(dataUploadInfoDTO));
         if (dataUploadInfoDTO != null && "selfCheckLog".equals(dataUploadInfoDTO.getType().getValue())) {
             SelfCheckLogVO selfCheckLogVO = JSON.parseObject(dataUploadInfoDTO.getData(), SelfCheckLogVO.class);
             try {
                 SelfCheckLog scl = selfCheckLogService.update(new SelfCheckLog(selfCheckLogVO));
-                if (scl != null) {
-                    return true;
-                }
+                return scl != null;
             } catch (ServiceException e) {
                 System.out.println("error: " + e.toString());
             }
@@ -112,7 +112,8 @@ public class DataStoreServiceImpl implements DataStoreService, TransactionalAspe
 
     @Override
     public boolean uploadSystemMetrics(final List<SystemMetrics> list) throws RemoteException {
-        if (list == null) {
+		LOG.info("uploadSystemMetrics  list= {} ", JSON.toJSONString(list));
+		if (list == null) {
             return false;
         }
 
