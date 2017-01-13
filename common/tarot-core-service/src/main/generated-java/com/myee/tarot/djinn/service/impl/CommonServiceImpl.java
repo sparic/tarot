@@ -198,36 +198,35 @@ public class CommonServiceImpl implements CommonService, TransactionalAspectAwar
 
 	@Override
 	public boolean sendEmail(String jsonArgs) throws RemoteException {
-//		LOG.info(" sendEmail jsonArgs = {}", jsonArgs);
-//		JSONObject object = JSON.parseObject(jsonArgs);
-//		String boardNO = object.getString(com.myee.djinn.constants.Constants.BOARD_NO);
-//		String errorInfo = object.getString(com.myee.djinn.constants.Constants.ERROR_INFO);
-//		String time = object.getString(com.myee.djinn.constants.Constants.TIME);
-//		String subject = object.getString(com.myee.djinn.constants.Constants.SUBJECT);
-//		long timeStamp = time == null ? 0 : Long.parseLong(time);
-//		Date sendDate = new Date();
-//		if (timeStamp != 0) {
-//			sendDate = new Date(timeStamp);
-//		}
-//		//查询店铺
-//		DeviceUsed deviceUsed = deviceUsedService.getByBoardNo(boardNO);
-//		MerchantStore merchantStore = deviceUsed.getStore();
-//		//拼接邮件内容
-//
-//		StringBuilder sb = new StringBuilder();
-//		sb.append("主板编号：").append(boardNO).append("\n");
-//		sb.append("设备名称：").append(deviceUsed.getName()).append("\n");
-//		sb.append("店铺名称：").append(merchantStore.getName()).append("\n");
-//		sb.append("店铺电话：").append(merchantStore.getPhone()).append("\n");
-//		sb.append("报错时间：").append(DateTimeUtils.getDefaultDateString(sendDate)).append("\n");
-//		sb.append("错误信息：").append("\n");
-//		sb.append(errorInfo).append("\n");
-//		EmailSenderUtil emailSenderUtil = new EmailSenderUtil();
-//		subject = StringUtil.isNullOrEmpty(subject) ? "发生异常" : subject;
-//		AjaxResponse response = emailSenderUtil.send(FROM, TO, subject, sb.toString());
-//		LOG.info(" sendEmail result = {}", response.getStatus());
-//		return response.getStatus() == 0;
-		return false;
+		LOG.info(" sendEmail jsonArgs = {}", jsonArgs);
+		JSONObject object = JSON.parseObject(jsonArgs);
+		String boardNO = object.getString(com.myee.djinn.constants.Constants.BOARD_NO);
+		String errorInfo = object.getString(com.myee.djinn.constants.Constants.ERROR_INFO);
+		String time = object.getString(com.myee.djinn.constants.Constants.TIME);
+		String subject = object.getString(com.myee.djinn.constants.Constants.SUBJECT);
+		long timeStamp = time == null ? 0 : Long.parseLong(time);
+		Date sendDate = new Date();
+		if (timeStamp != 0) {
+			sendDate = new Date(timeStamp);
+		}
+		//查询店铺
+		DeviceUsed deviceUsed = deviceUsedService.getByBoardNo(boardNO);
+		MerchantStore merchantStore = deviceUsed.getStore();
+		//拼接邮件内容
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("主板编号：").append(boardNO).append("\n");
+		sb.append("设备名称：").append(deviceUsed.getName()).append("\n");
+		sb.append("店铺名称：").append(merchantStore.getName()).append("\n");
+		sb.append("店铺电话：").append(merchantStore.getPhone()).append("\n");
+		sb.append("报错时间：").append(DateTimeUtils.getDefaultDateString(sendDate)).append("\n");
+		sb.append("错误信息：").append("\n");
+		sb.append(errorInfo).append("\n");
+		EmailSenderUtil emailSenderUtil = new EmailSenderUtil();
+		subject = StringUtil.isNullOrEmpty(subject) ? "发生异常" : subject;
+		AjaxResponse response = emailSenderUtil.send(FROM, TO, subject, sb.toString());
+		LOG.info(" sendEmail result = {}", response.getStatus());
+		return response.getStatus() == 0;
 	}
 
 	private VersionInfo readfile(File file) {
