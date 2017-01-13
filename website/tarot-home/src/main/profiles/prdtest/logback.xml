@@ -34,7 +34,7 @@
 
     <logger name="com.myee.tarot" level="INFO"/>
     <logger name="org.springframework" level="INFO"/>
-    <logger name="org.hibernate" level="ERROR"/>
+    <logger name="org.hibernate" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="console"/>
