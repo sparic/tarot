@@ -216,6 +216,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         $scope.activeTab = iConfig;
     };
 
+    //进入配置编辑页面的初始化参数
     function initialConfig() {
         //formly配置项config
         $scope.formDataUpdateConfig = {
@@ -225,10 +226,12 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
             },
             fields: $scope.mgrUpdateConfigData.fields
         };
+        $scope.fileList = [];//存放上传的文件列表
         $scope.createTimeStamp = '';//创建时间，用于存储路径当文件夹名用
         initialParams();
     }
 
+    //初始化提交使用的结果集参数
     function initialParams() {
         $scope.submitResult = [];
     }
@@ -261,6 +264,8 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                         editing: false
                     };
                     $scope.formDataUpdateConfig.model.attributes.push(attr);
+                    //清空文件input
+                    clearInputFile(index);
                 });
             }
         });
@@ -373,7 +378,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                 $filter('toasterManage')(5, "保存配置文件成功!",true);
                 //保存配置记录到数据库
                 var model = formly.model;
-                console.log(model)
+                //console.log(model)
                 var dataConfig = {
                     id:model.id,
                     name:$scope.submitResult.length > 0 ? ($scope.submitResult[0].name+ '_' +$scope.submitResult[0].version) :baseInfo.FILE_NAME,
@@ -423,7 +428,8 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
             //model.attributes.splice(index, 1);
             //为了文件假删除一行
             model.attributes[index].show = false;
-            $scope.fileList[index] = {};
+            //清空文件input
+            clearInputFile(index);
         }, function () {
             //点击取消回调
         });
@@ -438,96 +444,145 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
 
     //提交一行属性
     $scope.updateAttr = function (model, thisRowTemp, index) {
-        console.log(model)
-        console.log(index)
-        console.log(thisRowTemp)
-
-        //给thisRowTemp的name赋初值
-        thisRowTemp.name = $scope.formDataUpdateConfig.model.attributes[index].name;
+        //console.log(model)
+        //console.log(index)
+        //console.log(thisRowTemp)
 
 
         var _file = $scope.fileList[index];
-        if (!_file) {
+        //console.log(_file)
+        if ( (!_file || !$filter('isHasProp')(_file)/*_file == {}*/) &&
+            ($filter('isNullOrEmptyString')(thisRowTemp) || $filter('isNullOrEmptyString')(thisRowTemp.md5) || $filter('isNullOrEmptyString')(thisRowTemp.web))) {
             $timeout(function () {
                 $filter('toasterManage')(5, "请选择升级包文件!",false);
                 //toaster.error({body: "请选择升级包文件!"})
             }, 0);
             return;
         }
-        var fileName = _file.name;
+        //如果上传了文件，就执行上传文件的业务逻辑
+        else if( _file && $filter('isHasProp')(_file)/*_file != {}*/ ) {
+            if ($filter('isNullOrEmptyString')(thisRowTemp)
+                    //|| $filter('isNullOrEmptyString')(thisRowTemp.name)
+                    || $filter('isNullOrEmptyString')(thisRowTemp.version)
+                        //|| $filter('isNullOrEmptyString')(thisRow.type)
+                    || $filter('isNullOrEmptyString')(thisRowTemp.force_update)
 
-        //自研平板的版本号就是文件名，其他模块是手动输入
-        thisRowTemp.version = ($scope.formDataUpdateConfig.model.type == mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE? $filter('getFileName')(fileName,$scope.mgrUpdateConfigData.constant.FILE_NAME_NO_EXTERN) : thisRowTemp.version);
-        if (!checkThisRowOK(thisRowTemp,index,$scope.formDataUpdateConfig.model.attributes)) {
-            return;
-        }
-        //if (thisRow.name != $filter('getFileName')(_file.name, $scope.mgrUpdateConfigData.constant.FILE_NAME_NO_EXTERN)) {
-        //除了自研平板，其他名字都是从对照表取
-        if ($scope.formDataUpdateConfig.model.type != mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE
-                && thisRowTemp.name != calNameByFileName(fileName,thisRowTemp,index) ) {
-            $timeout(function () {
-                $filter('toasterManage')(5, "上传的文件名与模块名不匹配!",false);
-            }, 0);
-            return false;
-        }
-        else if( $scope.formDataUpdateConfig.model.type == mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE
-            && !checkBoardUpdateFileNameOK(fileName) ) {
-            return false;
-        }
-
-        var fd = new FormData();
-        var baseInfo = getBaseInfoByType($scope.formDataUpdateConfig.model.type);
-        //自研平板的存储路径是从文件名计算出来的
-        var pathNoFileName = getNoFileNamePathByType(baseInfo,fileName);
-        $scope.selfDesignPadFileName = fileName;//缓存自研平板文件名
-        fd.append('file', _file);
-        //先校验文件是否存在，若存在则不让重复上传——目前应该只对自研平板有效，其他模块的上传时间肯定不相同
-        cResource.get($scope.mgrUpdateConfigData.api.isFileExist,{path: pathNoFileName +'/'+ fileName,storeId:mgrUpdateConfigData.constant.DEFAULT_MERCHANT_STORE}).then(function(res){
-            if (0 != res.status) {
+            ) {
                 $timeout(function () {
-                    $filter('toasterManage')(5, fileName + "查询是否存在失败!",false);
+                    $filter('toasterManage')(5,"请填写完整信息!",false);
                 }, 0);
                 return false;
-            } else {
-                if( res.rows[0].fileIsExist ) {
-                    $timeout(function () {
-                        $filter('toasterManage')(5, fileName + "文件已存在，请先在资源管理中删除旧升级包文件!",false);
-                    }, 0);
-                    angular.element('#file'+index)[0].value = '';//清空input[type=file]value[ 垃圾方式 建议不要使用]
-                } else {
-                    cResource.upload($scope.mgrUpdateConfigData.api.uploadFile,{'type': 'file',storeId:mgrUpdateConfigData.constant.DEFAULT_MERCHANT_STORE, path: pathNoFileName}, fd).then(function(res){
-                        if (0 != res.status) {
-                            $timeout(function () {
-                                $filter('toasterManage')(5, fileName + "上传失败!",false);
-                            }, 0);
-                            $scope.formDataUpdateConfig.model.attributes[index].uploadState = false;
-                            return;
-                        } else {
-                            $timeout(function () {
-                                $filter('toasterManage')(5, fileName + "上传成功!",true);
-                            }, 0);
-
-                            //复制当前编辑的临时一行到我们要上传的数组
-                            $scope.formDataUpdateConfig.model.attributes[index] = {
-                                version: thisRowTemp.version,
-                                description: thisRowTemp.description,
-                                force_update: thisRowTemp.force_update,
-                                name: thisRowTemp.name,
-                                md5 : res.dataMap.tree.md5,
-                                web : baseUrl.pushUrl + res.dataMap.tree.downloadPath,
-                                uploadState : true,
-                                show: true,
-                                editing : false,
-                            } ;
-                            console.log($scope.formDataUpdateConfig.model.attributes[index])
-                            console.log(thisRowTemp)
-                        }
-                    });
-                }
             }
-        });
+            //给thisRowTemp的name赋初值
+            thisRowTemp.name = thisRowTemp.name? thisRowTemp.name : $scope.formDataUpdateConfig.model.attributes[index].name;
+
+            var fileName = _file.name;
+
+            //自研平板的版本号就是文件名，其他模块是手动输入
+            thisRowTemp.version = ($scope.formDataUpdateConfig.model.type == mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE? $filter('getFileName')(fileName,$scope.mgrUpdateConfigData.constant.FILE_NAME_NO_EXTERN) : thisRowTemp.version);
+            if (!checkThisRowOK(thisRowTemp,index,$scope.formDataUpdateConfig.model.attributes)) {
+                return false;
+            }
+            //if (thisRow.name != $filter('getFileName')(_file.name, $scope.mgrUpdateConfigData.constant.FILE_NAME_NO_EXTERN)) {
+            //除了自研平板，其他名字都是从对照表取
+            if ($scope.formDataUpdateConfig.model.type != mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE
+                && thisRowTemp.name != calNameByFileName(fileName,thisRowTemp,index) ) {
+                $timeout(function () {
+                    $filter('toasterManage')(5, "上传的文件名与模块名不匹配!",false);
+                }, 0);
+                return false;
+            }
+            else if( $scope.formDataUpdateConfig.model.type == mgrUpdateConfigData.constant.BASE_INFO_SELF_DESIGN_PAD.TYPE
+                && !checkBoardUpdateFileNameOK(fileName) ) {
+                return false;
+            }
+
+            var fd = new FormData();
+            var baseInfo = getBaseInfoByType($scope.formDataUpdateConfig.model.type);
+            //自研平板的存储路径是从文件名计算出来的
+            var pathNoFileName = getNoFileNamePathByType(baseInfo,fileName);
+            $scope.selfDesignPadFileName = fileName;//缓存自研平板文件名
+            fd.append('file', _file);
+            //先校验文件是否存在，若存在则不让重复上传——目前应该只对自研平板有效，其他模块的上传时间肯定不相同
+            cResource.get($scope.mgrUpdateConfigData.api.isFileExist,{path: pathNoFileName +'/'+ fileName,storeId:mgrUpdateConfigData.constant.DEFAULT_MERCHANT_STORE}).then(function(res){
+                if (0 != res.status) {
+                    $timeout(function () {
+                        $filter('toasterManage')(5, fileName + "查询是否存在失败!",false);
+                    }, 0);
+                    return false;
+                } else {
+                    if( res.rows[0].fileIsExist ) {
+                        $timeout(function () {
+                            $filter('toasterManage')(5, fileName + "文件已存在，请先在资源管理中删除旧升级包文件!",false);
+                        }, 0);
+                        //清空文件input
+                        clearInputFile(index);
+                    } else {
+                        cResource.upload($scope.mgrUpdateConfigData.api.uploadFile,{'type': 'file',storeId:mgrUpdateConfigData.constant.DEFAULT_MERCHANT_STORE, path: pathNoFileName}, fd).then(function(res){
+                            if (0 != res.status) {
+                                $timeout(function () {
+                                    $filter('toasterManage')(5, fileName + "上传失败!",false);
+                                }, 0);
+                                $scope.formDataUpdateConfig.model.attributes[index].uploadState = false;
+                                return;
+                            } else {
+                                $timeout(function () {
+                                    $filter('toasterManage')(5, fileName + "上传成功!",true);
+                                }, 0);
+
+                                //复制当前编辑的临时一行到我们要上传的数组
+                                $scope.formDataUpdateConfig.model.attributes[index] = {
+                                    version: thisRowTemp.version,
+                                    description: thisRowTemp.description,
+                                    force_update: thisRowTemp.force_update,
+                                    name: thisRowTemp.name,
+                                    md5 : res.dataMap.tree.md5,
+                                    web : baseUrl.pushUrl + res.dataMap.tree.downloadPath,
+                                    uploadState : true,
+                                    show: true,
+                                    editing : false,
+                                } ;
+                                //console.log($scope.formDataUpdateConfig.model.attributes[index])
+                                //console.log(thisRowTemp)
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        //如果没有上传文件，则直接就拿thisRowTemp的数据
+        else if( (!_file || !$filter('isHasProp')(_file)/*_file == {}*/)
+            && !$filter('isNullOrEmptyString')(thisRowTemp.md5)
+            && !$filter('isNullOrEmptyString')(thisRowTemp.web)) {
+            //给thisRowTemp的name赋初值
+            thisRowTemp.name = thisRowTemp.name? thisRowTemp.name : $scope.formDataUpdateConfig.model.attributes[index].name;
+
+            //复制当前编辑的临时一行到我们要上传的数组
+            $scope.formDataUpdateConfig.model.attributes[index] = {
+                version: thisRowTemp.version,
+                description: thisRowTemp.description,
+                force_update: thisRowTemp.force_update,
+                name: thisRowTemp.name,
+                md5 : thisRowTemp.md5,
+                web : thisRowTemp.web,
+                uploadState : false,
+                show: true,
+                editing : false,
+            } ;
+        }
+
 
     };
+
+    //清空文件缓存
+    function clearInputFile(index) {
+        if(angular.element('#file'+index)[0]) {
+            angular.element('#file'+index)[0].value = '';//清空input[type=file]value[ 垃圾方式 建议不要使用]
+        }
+        if($scope.fileList[index]) {
+            $scope.fileList[index] = {};
+        }
+    }
 
     //自研平板的存储路径是从文件名计算出来的
     function getNoFileNamePathByType(baseInfo,fileName) {
@@ -559,7 +614,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
             )
         ) {
             $timeout(function () {
-                $filter('toasterManage')(5,"请填写完整信息!",false);
+                $filter('toasterManage')(5,"请填写完整信息！",false);
             }, 0);
             checkOK = false;
             return checkOK;
@@ -578,8 +633,8 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                     isFind = true;
                 }
             });
-            if(!isFind) {
-                $filter('toasterManage')(5, "配置详细与类型不匹配，请按照对照表设置配置详细!",false);
+            if(indexData.show && !isFind) {
+                $filter('toasterManage')(5, "某条配置详细与类型不匹配，请按照对照表设置配置详细!",false);
                 checkOK = false;
             }
 
@@ -717,7 +772,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         model.attrTemp.push(data);
     };
 
-    $scope.fileList = [];//存放上传的文件列表
+
     //校验要上传的升级文件文件名与模块/应用名称是否一致
     $scope.checkUpdate = function (file, thisRow, index) {
         var _file = file.files[0];
@@ -734,13 +789,15 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
             //按对照表查询名称与文件是否一致
             if (thisRow.name != autoName) {
                 $filter('toasterManage')(5,"上传的文件名与模块或应用名不一致!",false);
-                angular.element('#file'+index)[0].value = '';//清空input[type=file]value[ 垃圾方式 建议不要使用]
+                //清空文件input
+                clearInputFile(index);
                 return false;
             }
 
             //校验同一类型下不允许重复名称
             if( thisRow.show && !checkThisRowOK(thisRow,index,$scope.formDataUpdateConfig.model.attributes,true)) {
-                angular.element('#file'+index)[0].value = '';//清空input[type=file]value[ 垃圾方式 建议不要使用]
+                //清空文件input
+                clearInputFile(index);
                 $scope.formDataUpdateConfig.model.attributes[index].name = '';//校验失败，清空自动生成的名称
                 return false;
             }
@@ -757,7 +814,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
                 return false;
             }
             positionFind = fileName.toLowerCase().indexOf( indexData.key.toLowerCase() );//变小写然后查找
-            console.log(positionFind)
+            //console.log(positionFind)
             //indexData等价于array[index]
             var type = $scope.formDataUpdateConfig.model.type;
             if ( indexData.type == type) {
@@ -781,7 +838,8 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
         if( !resultName ) {
             $timeout(function () {
                 $filter('toasterManage')(5,"不符合对照表规则的文件!请更换!",false);
-                angular.element('#file'+index)[0].value = '';//清空input[type=file]value[ 垃圾方式 建议不要使用]
+                //清空文件input
+                clearInputFile(index);
             }, 0);
         }
         return resultName;
@@ -826,7 +884,7 @@ function updateConfigCtrl($scope,$resource, cResource, $filter, cfromly, Constan
     $scope.searchVersion = function ( index,thisRow ) {
         //if(!thisRow.showDetail) {
             cResource.get('./updateConfig/getProductUsedInfo',{productUsedId:$scope.initalBindProductList[index].id}).then(function(data){
-                console.log(data)
+                //console.log(data)
                 $scope.bindDeviceIndex = index;
                 $scope.bindDeviceDetail[index] = data.rows;
             });
