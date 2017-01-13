@@ -10,7 +10,6 @@ angular.module('myee', [])
  */
 receiptPrintedCtrl.$inject = ['$scope', 'cResource', 'Constants', 'cTables', 'cfromly', 'NgTableParams', '$q', 'cAlerts', 'toaster', '$filter'];
 function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTableParams, $q, cAlerts, toaster, $filter) {
-
     var iDatatable = 0, iEditor = 5, iBind = 2;
     $scope.previewButtonName = false;
     var vm = $scope.showCase = {};
@@ -75,14 +74,15 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
                         $scope.formDataReceiptModule.model.attributes = [];
                     }
                     $scope.formDataReceiptModule.model.attributes = [];
+                    data.itemList = resp.dataMap.itemList == undefined ? [] : resp.dataMap.itemList;
                     angular.forEach(resp.dataMap.itemList, function (indexData, index, array) {
                         goItems.push({
                             align : indexData.align,
                             content : indexData.content,
                             font : indexData.font,
                             isBold : indexData.bold,
-                            isNewline : indexData.newline,
-                            isUnderline : indexData.underline,
+                            isNewline : indexData.newline == undefined? indexData.isNewline : indexData.newline,
+                            isUnderline : indexData.underline == undefined? indexData.isUnderline : indexData.underline,
                             itemType : indexData.itemType,
                             size : indexData.size,
                             editing : false,
@@ -98,8 +98,8 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
                         content : indexData.content,
                         font : indexData.font,
                         isBold : indexData.bold,
-                        isNewline : indexData.newline,
-                        isUnderline : indexData.underline,
+                        isNewline : indexData.newline == undefined? indexData.isNewline : indexData.newline,
+                        isUnderline : indexData.underline == undefined? indexData.isUnderline : indexData.underline,
                         itemType : indexData.itemType,
                         size : indexData.size,
                         editing : false,
@@ -180,8 +180,6 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
                     $scope.formBindData.model = {};
                 }
                 $scope.activeTab = iBind;
-                $scope.showInfoEditor = false;
-                $scope.showBindEditor = true;
             });
         });
     };
@@ -221,6 +219,7 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
                 }
             });
             $scope.goDataTable();
+            $scope.search()
         });
     };
 
@@ -324,6 +323,9 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
                 $scope.tableOpts.data[$scope.rowIndex] = response.dataMap.updateResult;
                 $scope.tableOpts.data[$scope.rowIndex].itemList.splice(0, $scope.tableOpts.data[$scope.rowIndex].itemList.length);
             }
+            if ($scope.tableOpts.data[$scope.rowIndex] != undefined) {
+                $scope.tableOpts.data[$scope.rowIndex].itemList = items;
+            }
             $scope.goDataTable();
         });
     };
@@ -341,8 +343,6 @@ function receiptPrintedCtrl($scope, cResource, Constants, cTables, cfromly, NgTa
     //formly返回
     $scope.goDataTable = function () {
         $scope.activeTab = iDatatable;
-        $scope.showBindEditor = false;
-        $scope.showInfoEditor = false;
     };
 
     //formly配置项config

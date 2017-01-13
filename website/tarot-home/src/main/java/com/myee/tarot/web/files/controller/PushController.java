@@ -162,10 +162,14 @@ public class PushController {
                     return AjaxResponse.failed(-2, message);
                 }
             }
-            boolean isMove = moveToRecycle(resFile);//移动文件或者文件夹到回收站
-            if (isMove) { //移动成功后执行删除
+            boolean isMove = copyToRecycle(resFile);//复制文件或者文件夹到回收站
+            if (isMove) { //复制成功后执行删除
                 if (resFile.exists()) {
-                    resFile.delete();
+                    boolean result = resFile.delete();
+                    if (!result) {
+                        message = "删除失败！";
+                        return AjaxResponse.failed(-3, message);
+                    }
                 }
                 if (path.lastIndexOf(File.separator) != -1) {
                     File parentPathFile = getResFile(orgID, path.substring(0, path.lastIndexOf(File.separator)));
@@ -173,7 +177,7 @@ public class PushController {
                 }
                 return new AjaxPageableResponse(Lists.<Object>newArrayList(resMap.values()));
             } else {
-                message = "所删除的文件不存在！";
+                message = "删除失败！";
                 return AjaxResponse.failed(-3, message);
             }
         }
@@ -393,7 +397,7 @@ public class PushController {
      * @param file
      * @return
      */
-    public boolean moveToRecycle(File file) {
+    public boolean copyToRecycle(File file) {
         try {
             if (file.isFile()) {
                 String targetPath = getDeletedPath(file);
@@ -402,34 +406,34 @@ public class PushController {
                 File parentPath = new File(dir.getParent());
                 parentPath.mkdirs();
                 // Move file to new directory
-                boolean success = file.renameTo(dir);
+                com.myee.tarot.core.util.FileUtils.copyFile(file, dir);
                 return true;
             } else if (!file.exists()) {
+                LOGGER.info("所删除的文件不存在！" + '\n');
                 return false;
             } else {
                 File files[] = file.listFiles();
                 if (files != null && files.length > 0) {
                     for (int i = 0; i < files.length; i++) {
-                        moveToRecycle(files[i]);
+                        copyToRecycle(files[i]);
                     }
                 } else { //空目录
                     String targetPath = getDeletedPath(file);
                     // Destination directory
                     File dir = new File(targetPath);
                     if (dir.exists()) {
-                        file.delete();
-                        return true;
+                        boolean result = file.delete();
+                        return result;
                     } else {
-                        boolean success = file.renameTo(dir);
+                        com.myee.tarot.core.util.FileUtils.copyFile(file, dir);
                         return true;
                     }
                 }
-                LOGGER.info("所删除的文件不存在！" + '\n');
                 return false;
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            LOGGER.info("unable to delete the folder!");
+            LOGGER.info("unable to copy the file!");
         }
         return false;
     }
