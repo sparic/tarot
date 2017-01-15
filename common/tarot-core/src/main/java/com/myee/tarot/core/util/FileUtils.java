@@ -12,6 +12,7 @@ import java.util.Date;
 public class FileUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(FileUtils.class);
+
     public static long copyFile(File srcFile, File desFile) throws Exception {
         long time = new Date().getTime();
         int length = 2097152;
